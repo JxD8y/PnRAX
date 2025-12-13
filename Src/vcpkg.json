@@ -1,0 +1,11 @@
+{
+  "name": "pnrax",
+  "version-string": "0.0.1",
+  "builtin-baseline": "594ad8871e1e8e45f8e626c015fd611163430207",
+  "dependencies": [
+    {
+      "name": "capstone",
+      "features": ["x86"]
+    }
+  ]
+}
