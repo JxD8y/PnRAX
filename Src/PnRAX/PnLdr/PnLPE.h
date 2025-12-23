@@ -1,4 +1,69 @@
 //Contains definitions for the PE
+
+
+/*
+
+[ FILE START (0x00) ]
+      |
+      v
++------------------------+
+|   IMAGE_DOS_HEADER     |
+|  [0x00] e_magic (MZ)   |
+|  [0x3C] e_lfanew ---------------------------------------+
++------------------------+                                |
+           |                                              |
+           v                                              |
++------------------------+                                |
+|      MS-DOS STUB       | <--- (Just sits here)          |
+| "This program cannot..."                                |
++------------------------+                                |
+           |                                              |
+           v                                              |
++------------------------+ <------------------------------+
+|   IMAGE_NT_HEADERS     | (Found via e_lfanew)
+|                        |
+|  [ Signature ] ("PE")  |
+|                        |
+|  [ IMAGE_FILE_HEADER ] |
+|   - Machine            |
+|   - NumberOfSections   |
+|   - SizeOfOptionalHeader --+
+|                        |   |
+| [IMAGE_OPTIONAL_HEADER]|   |
+|   - EntryPoint         |   |
+|   - ImageBase          |   |
+|   - Data Directories   |   |
++------------------------+   |
+           |                 |
+           v                 |
++------------------------+ <++ (Calculated via SizeOfOptionalHeader)
+|     SECTION TABLE      |
+| [Section Header 1]     |
+|   - Name: ".text"      |
+|   - PointerToRawData ---------------------+
+|   - VirtualAddress     |                  |
+|                        |                  |
+| [Section Header 2]     |                  |
+|   - Name: ".data"      |                  |
+|   - PointerToRawData -----------------------------------+
++------------------------+                  |             |
+           |                                |             |
+           v                                |             |
++------------------------+ <----------------+             |
+|    SECTION 1 DATA      |                                |
+|  (.text / Code bytes)  |                                |
++------------------------+                                |
+           |                                              |
+           v                                              |
++------------------------+ <------------------------------+
+|    SECTION 2 DATA      |
+|  (.data / Globals)     |
++------------------------+
+
+
+*/
+
+
 #ifndef PNLPE_H
 #define PNLPE_H
 #include <winnt.h>
