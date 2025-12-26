@@ -5,7 +5,11 @@
   "dependencies": [
     {
       "name": "capstone",
-      "features": ["x86"]
+      "features": [ "x86" ]
+    },
+    {
+      "name": "imgui",
+      "features": [ "dx11-binding", "win32-binding" ]
     }
   ]
 }
