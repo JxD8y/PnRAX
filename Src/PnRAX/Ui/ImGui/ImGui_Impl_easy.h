@@ -9,10 +9,15 @@
 #include <vector>
 #include <ShellScalingApi.h>
 
+#ifdef WIN32
 #pragma comment(lib,"d3d11.lib")
 #pragma comment(lib,"d3dcompiler.lib")
 #pragma comment(lib,"DXGI.lib")
 #pragma comment(lib,"Shcore.lib")
+#endif
+#ifndef WIN32
+#error "This library suit is only compatible with windows"
+#endif
 
 using namespace std;
 

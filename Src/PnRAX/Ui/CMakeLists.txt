@@ -1,5 +1,6 @@
-add_library(ImEasy STATIC ImGui_Impl_easy.cpp)
+add_subdirectory("ImGui")
 
-find_package(imgui CONFIG REQUIRED)
+add_library(PnRAXGUI STATIC 
+		"MainWindow.cpp")
 
-target_link_libraries(ImEasy PRIVATE imgui::imgui)
+target_link_libraries(PnRAXGUI private ImEasy)

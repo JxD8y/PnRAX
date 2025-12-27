@@ -167,11 +167,14 @@ namespace Imeasy {
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
 
-		ImGuiIO& io = ImGui::GetIO(); (void)io;
+		ImGuiIO& io = ImGui::GetIO();
+		auto pFont = io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\Arial.ttf", 22.0);
+		if (pFont == NULL) {
+			io.Fonts->AddFontDefault();
+		}
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 		ImGuiStyle& style = ImGui::GetStyle();
-		/*style.FontScaleMain = 1;
-		style.FontSizeBase = 25;*/
+		
 
 		ImGui::StyleColorsDark(&style);
 		ImGui_ImplWin32_Init(hw);
