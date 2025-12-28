@@ -1,0 +1,34 @@
+#include <ImGuiWindow.h>
+
+ImGuiWindow::ImGuiWindow(string t): title(t) {
+	this->id = rand() % 10000; //Probably Uniqueness is ensured
+	this->m_hw = IMG_DEF_HW;
+	this->m_xy = IMG_DEF_XY
+}
+
+void ImGuiWindow::SetRenderingFunction(RenderingFunction pFunc) {
+	if (pFunc == NULL)
+		throw std::invalid_argument("pFunc was null");
+	this->pRdFunc = pFunc;
+}
+void ImGuiWindow::SetWindowTitle(string title) {
+	this->m_title = title;
+}
+void ImGuiWindow::SetWindowRect(ImVec2 hw) {
+	this->m_hw = hw;
+}
+void ImGuiWindow::SetLWindowPos(ImVec2 xy) {
+	this->m_xy = xy;
+}
+[[nodiscard]] int ImGuiWindow::GetId() {
+	return this->m_id;
+}
+[[nodiscard]] string ImGuiWindow::GetTitle() {
+	return this->m_title;
+}
+
+void ImGuiWindow::Render() {
+	if (this->pRdFunc != NULL) {
+		this->pRdFunc(this);
+	}
+}

@@ -1,6 +1,6 @@
 add_library(ImEasy STATIC
 			ImGui_Impl_easy.cpp
-			"ImGuiWindow.h")
+			ImGuiWindowManager.cpp)
 
 find_package(imgui CONFIG REQUIRED)
 
