@@ -1,4 +1,5 @@
 #include "ImGui_Impl_easy.h"
+#include "ImGuiWindow.h"
 #include <algorithm>
 #include <iostream>
 
@@ -8,6 +9,7 @@ namespace Imeasy {
 	bool TerminateOnClose = true;
 	int width = 0;
 	int height = 0;
+
 	void PrintErrorMessage(HRESULT hr) {
 		LPVOID lpMsgBuf;
 		DWORD dw = FormatMessage(
@@ -27,12 +29,108 @@ namespace Imeasy {
 		}
 	}
 
-	void AddRenderingObject(WindowPart wp) {
-		Imeasy::Objects.push_back(wp);
+	void SetRenderingList(vector<ImGuiWindow*> vWindow) {
+		Imeasy::vWindow = vWindow;
+	}
+	void RenderTileWindows(int h, int w);
+	void StartRendering(string title, UINT height, UINT width) {
+		if (!Imeasy::CreateDXDevice())
+		{
+			throw exception("failed to create dx dev");
+		}
+		HWND hw = CreateDxWindow(title.c_str(), height, width);
+		if (hw == NULL)
+		{
+			throw exception("failed to create window");
+		}
+		ShowWindow(hw, SW_SHOW);
+		if (!CreateDxSwapChain(hw)) {
+			throw exception("failed to create swap chain");
+		}
+		if (!CreateDxRenderTargetView()) {
+			throw exception("failed to create dx render target view");
+		}
+
+		IMGUI_CHECKVERSION();
+		ImGui::CreateContext();
+
+		ImGuiIO& io = ImGui::GetIO();
+		auto pFont = io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\Arial.ttf", 22.0);
+		if (pFont == NULL) {
+			io.Fonts->AddFontDefault();
+		}
+		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+		ImGuiStyle& style = ImGui::GetStyle();
+		
+
+		ImGui::StyleColorsDark(&style);
+		ImGui_ImplWin32_Init(hw);
+		ImGui_ImplDX11_Init(Imeasy::pdxDev, Imeasy::pdxDevCtx);
+		bool run = true;
+		const float cColor[4] = { 0,0,0,0 };
+		while (run) {
+			MSG msg;
+			while (PeekMessageA(&msg, Imeasy::hw, 0, 0, PM_REMOVE)) {
+				TranslateMessage(&msg);
+				DispatchMessageA(&msg);
+				if (msg.message == WM_CLOSE)
+				{
+					run = false;
+				}
+			}
+
+			ImGui_ImplDX11_NewFrame();
+			ImGui_ImplWin32_NewFrame();
+			ImGui::NewFrame();
+
+			Imeasy::RenderTileWindows(Imeasy::rh,Imeasy::rw);
+
+			if (Imeasy::rw != 0 && Imeasy::rh != 0)
+			{
+				Imeasy::ClearDxRenderingTarget();
+				Imeasy::pswCh->ResizeBuffers(0, Imeasy::rw, Imeasy::rh, DXGI_FORMAT_UNKNOWN, 0);
+				Imeasy::rw = Imeasy::rh = 0;
+				CreateDxRenderTargetView();
+			}
+
+			ImGui::Render();
+			Imeasy::pdxDevCtx->OMSetRenderTargets(1, &Imeasy::pRTV, NULL);
+			Imeasy::pdxDevCtx->ClearRenderTargetView(Imeasy::pRTV, cColor);
+			ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+			Imeasy::pswCh->Present(1, 0);
+
+		}
 	}
 
-	void RemoveRenderingObject(WindowPart wp) {
-		Imeasy::Objects.erase(std::remove(Imeasy::Objects.begin(), Imeasy::Objects.end(), wp));
+	void RenderTileWindows(int h,int w) {
+		if (Imeasy::vWindow.empty())
+			return;
+		int count = Imeasy::vWindow.size();
+		int cols = ceil(sqrt(count));
+		int rows = ceil(count / cols);
+		ImVec2 cellSz = ImVec2(w / cols, h / rows);
+
+		for (int i = 0; i < count; ++i) {
+			ImGuiWindow* pWin = Imeasy::vWindow[i];
+			int c = i % cols;
+			int r = i / cols;
+
+			ImVec2 cellPos = ImVec2(
+				w + (c * w),
+				h + (r * h)
+			);
+
+			ImGui::SetNextWindowPos(cellPos, ImGuiCond_Always);
+			ImGui::SetNextWindowSize(pWin->GetSize(), ImGuiCond_Always);
+
+			
+			if (ImGui::Begin(pWin->GetTitle().c_str(), nullptr,
+				ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings)) {
+
+				pWin->Render();
+			}
+			ImGui::End();
+		}
 	}
 
 	namespace {
@@ -143,76 +241,6 @@ namespace Imeasy {
 		void ClearDxRenderingTarget() {
 			pRTV->Release();
 			pRTV = NULL;
-		}
-	}
-
-	void StartRendering(string title, UINT height, UINT width) {
-		if (!Imeasy::CreateDXDevice())
-		{
-			throw exception("failed to create dx dev");
-		}
-		HWND hw = CreateDxWindow(title.c_str(), height, width);
-		if (hw == NULL)
-		{
-			throw exception("failed to create window");
-		}
-		ShowWindow(hw, SW_SHOW);
-		if (!CreateDxSwapChain(hw)) {
-			throw exception("failed to create swap chain");
-		}
-		if (!CreateDxRenderTargetView()) {
-			throw exception("failed to create dx render target view");
-		}
-
-		IMGUI_CHECKVERSION();
-		ImGui::CreateContext();
-
-		ImGuiIO& io = ImGui::GetIO();
-		auto pFont = io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\Arial.ttf", 22.0);
-		if (pFont == NULL) {
-			io.Fonts->AddFontDefault();
-		}
-		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-		ImGuiStyle& style = ImGui::GetStyle();
-		
-
-		ImGui::StyleColorsDark(&style);
-		ImGui_ImplWin32_Init(hw);
-		ImGui_ImplDX11_Init(Imeasy::pdxDev, Imeasy::pdxDevCtx);
-		bool run = true;
-		const float cColor[4] = { 0,0,0,0 };
-		while (run) {
-			MSG msg;
-			while (PeekMessageA(&msg, Imeasy::hw, 0, 0, PM_REMOVE)) {
-				TranslateMessage(&msg);
-				DispatchMessageA(&msg);
-				if (msg.message == WM_CLOSE)
-				{
-					run = false;
-				}
-			}
-
-			ImGui_ImplDX11_NewFrame();
-			ImGui_ImplWin32_NewFrame();
-			ImGui::NewFrame();
-
-			for (auto f : Imeasy::Objects) {
-				f();
-			}
-			if (Imeasy::rw != 0 && Imeasy::rh != 0)
-			{
-				Imeasy::ClearDxRenderingTarget();
-				Imeasy::pswCh->ResizeBuffers(0, Imeasy::rw, Imeasy::rh, DXGI_FORMAT_UNKNOWN, 0);
-				Imeasy::rw = Imeasy::rh = 0;
-				CreateDxRenderTargetView();
-			}
-
-			ImGui::Render();
-			Imeasy::pdxDevCtx->OMSetRenderTargets(1, &Imeasy::pRTV, NULL);
-			Imeasy::pdxDevCtx->ClearRenderTargetView(Imeasy::pRTV, cColor);
-			ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
-			Imeasy::pswCh->Present(1, 0);
-
 		}
 	}
 }

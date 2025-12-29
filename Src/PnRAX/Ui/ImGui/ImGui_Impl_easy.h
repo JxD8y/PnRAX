@@ -21,30 +21,33 @@
 
 using namespace std;
 
-typedef void (*WindowPart)();
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
+class ImGuiWindow; //FW declare
 
 namespace Imeasy {
 	extern int width;
 	extern int height;
 	void PrintErrorMessage(HRESULT hr);
 	void StartRendering(string title, UINT height, UINT width);
-	void AddRenderingObject(WindowPart wp);
-	void RemoveRenderingObject(WindowPart wp);
+	void SetRenderingList(vector<ImGuiWindow*> vWin);
+
 	namespace {
 		LRESULT WndProc(HWND hw, UINT msg, WPARAM wp, LPARAM lp);
 		int rh, rw = 0;
 		bool render = true;
-		vector<WindowPart> Objects;
 		ID3D11Device* pdxDev = NULL;
 		ID3D11DeviceContext* pdxDevCtx = NULL;
 		ID3D11RenderTargetView* pRTV = NULL;
 		IDXGISwapChain* pswCh = NULL;
+		vector<ImGuiWindow*> vWindow;
 		HWND hw;
 		bool CreateDXDevice();
 		bool CreateDxSwapChain(HWND hw);
 		bool CreateDxRenderTargetView();
 		HWND CreateDxWindow(string title, UINT height, UINT width);
 		void ClearDxRenderingTarget();
+
+		void RenderTileWindows();
 	}
 }

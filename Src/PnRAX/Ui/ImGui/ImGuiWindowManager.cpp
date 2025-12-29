@@ -27,5 +27,6 @@ void ImGuiWindowManager::closeWindow(ImGuiWindow* win) {
 }
 
 void ImGuiWindowManager::StartRendering() {
-	//Going to modify the Im imeasy to accept a list of imgui window
+	Imeasy::SetRenderingList(this->m_vWindow);
+	Imeasy::StartRendering(this->m_title, this->m_pDim.y, this->m_pDim.x);
 }

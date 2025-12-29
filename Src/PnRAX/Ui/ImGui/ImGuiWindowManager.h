@@ -16,11 +16,11 @@ class ImGuiWindow;
 
 class ImGuiWindowManager {
 public: 
-	using OnCloseHandler = function<void>;
+	using OnCloseHandler = function<void()>;
 
 	explicit ImGuiWindowManager(string title, ImVec2 perfDim);
-	ImGuiWindowManager(const ImGuiWindowManager&) = delete;
-	ImGuiWindowManager(const ImGuiWindowManager&&) = delete;
+	//ImGuiWindowManager(const ImGuiWindowManager&) = delete;
+	//ImGuiWindowManager(const ImGuiWindowManager&&) = delete;
 
 	void SetOnCloseHandler(OnCloseHandler onClose);
 	void AddWindow(ImGuiWindow* window);

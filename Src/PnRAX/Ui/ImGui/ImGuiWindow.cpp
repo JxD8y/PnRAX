@@ -1,9 +1,10 @@
-#include <ImGuiWindow.h>
+#include "ImGuiWindow.h"
 
-ImGuiWindow::ImGuiWindow(string t): title(t) {
-	this->id = rand() % 10000; //Probably Uniqueness is ensured
+ImGuiWindow::ImGuiWindow(string t){
+	this->m_title = t;
+	this->m_id = rand() % 10000; //Probably Uniqueness is ensured
 	this->m_hw = IMG_DEF_HW;
-	this->m_xy = IMG_DEF_XY
+	this->m_xy = IMG_DEF_XY;
 }
 
 void ImGuiWindow::SetRenderingFunction(RenderFunction pFunc) {
@@ -26,12 +27,19 @@ void ImGuiWindow::SetLWindowPos(ImVec2 xy) {
 [[nodiscard]] string ImGuiWindow::GetTitle() {
 	return this->m_title;
 }
+[[nodiscard]] ImVec2 ImGuiWindow::GetSize() {
+	return this->m_hw;
+}
+[[nodiscard]] ImVec2 ImGuiWindow::GetPos() {
+	return this->m_xy;
+}
 
 void ImGuiWindow::Render() {
 	if (this->pRdFunc != NULL) {
-		this->pRdFunc(this);
+		this->pRdFunc(*this);
 	}
 }
+
 void ImGuiWindow::Close() {
 	this->is_open = false;
 }

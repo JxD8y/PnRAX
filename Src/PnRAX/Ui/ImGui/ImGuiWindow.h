@@ -7,12 +7,12 @@
 
 class ImGuiWindow { //Base class
 public:
-	using RenderFunction = std::function<void(ImGuiWindow& imWin)>
+	//Only provide the inside of the Begin/End in this
+	using RenderFunction = std::function<void(ImGuiWindow& imWin)>;
 
-	friend class ImGuiWindowManager;
 	explicit ImGuiWindow(string title);
-	ImGuiWindow(ImGuiWindow& cObj) = delete;
-	ImGuiWindow(ImGuiWindow&& mObj) = delete;
+	//ImGuiWindow(ImGuiWindow& cObj) = delete;
+	//ImGuiWindow(ImGuiWindow&& mObj) = delete;
 
 	void SetRenderingFunction(RenderFunction pRdFunc);
 	void SetWindowTitle(string title);
@@ -22,6 +22,10 @@ public:
 	void Close();
 	[[nodiscard]] int GetId();
 	[[nodiscard]] string GetTitle();
+	[[nodiscard]] ImVec2 GetSize();
+	[[nodiscard]] ImVec2 GetPos();
+
+	void Render();
 
 private:
 	bool is_open = true;
@@ -31,5 +35,4 @@ private:
 	ImVec2 m_hw;
 	ImVec2 m_xy;
 
-	void Render();
 };

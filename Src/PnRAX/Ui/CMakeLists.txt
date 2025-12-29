@@ -1,6 +1,7 @@
 add_subdirectory("ImGui")
 
 add_library(PnRAXGUI STATIC 
-		"MainWindow.cpp")
+		"MainWindow.cpp"
+)
 
-target_link_libraries(PnRAXGUI private ImEasy)
+target_link_libraries(PnRAXGUI PRIVATE ImEasy)
