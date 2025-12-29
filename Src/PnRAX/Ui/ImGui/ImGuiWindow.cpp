@@ -6,7 +6,7 @@ ImGuiWindow::ImGuiWindow(string t): title(t) {
 	this->m_xy = IMG_DEF_XY
 }
 
-void ImGuiWindow::SetRenderingFunction(RenderingFunction pFunc) {
+void ImGuiWindow::SetRenderingFunction(RenderFunction pFunc) {
 	if (pFunc == NULL)
 		throw std::invalid_argument("pFunc was null");
 	this->pRdFunc = pFunc;
@@ -31,4 +31,7 @@ void ImGuiWindow::Render() {
 	if (this->pRdFunc != NULL) {
 		this->pRdFunc(this);
 	}
+}
+void ImGuiWindow::Close() {
+	this->is_open = false;
 }
