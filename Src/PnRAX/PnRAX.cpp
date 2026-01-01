@@ -3,15 +3,15 @@
 #include "UI/ImGui/ImGuiWindowManager.h"
 
 int main(int argc, char* argv[]) {
-    ImGuiWindow* win1 = new ImGuiWindow("Win1",ImVec2(0,0),ImVec2(400,600));
+    ImGuiWindow* win1 = new ImGuiWindow("Decompiler - App.exe:(.text+0xffffff)",ImVec2(0,0),ImVec2(400,600));
     win1->SetRenderingFunction(std::function<void(ImGuiWindow&)>([](ImGuiWindow& iWin) {
         ImGui::Text("Test text from 1 window");
     }));
-    ImGuiWindow* win2 = new ImGuiWindow("Win2", ImVec2(1, 1), ImVec2(400, 300));
+    ImGuiWindow* win2 = new ImGuiWindow("COFF browser - App.exe", ImVec2(1, 1), ImVec2(400, 300));
     win2->SetRenderingFunction(std::function<void(ImGuiWindow&)>([](ImGuiWindow& iWin) {
         ImGui::Text("Test text from 2 window");
         }));
-    ImGuiWindow* win3 = new ImGuiWindow("Win3", ImVec2(1, 2), ImVec2(400, 300));
+    ImGuiWindow* win3 = new ImGuiWindow("Import Table - App.exe", ImVec2(1, 2), ImVec2(400, 300));
     win3->SetRenderingFunction(std::function<void(ImGuiWindow&)>([](ImGuiWindow& iWin) {
         ImGui::Text("Test text from 3 window");
         }));

@@ -25,6 +25,7 @@ public:
 	void Render();
 
 	ImVec2 HW;
+	ImVec2 ComputedHW;
 	ImVec2 ComputedXY;
 	ImVec2 Grid; // X: COL Y: ROW
 private:
