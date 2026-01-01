@@ -108,8 +108,6 @@ namespace Imeasy {
 				ImGuiWindowFlags_NoSavedSettings;
 
 			if (ImGui::Begin(img->GetTitle().c_str(), nullptr, flags)) {
-				ImGui::Text("Grid: [%d, %d]", img->Grid.x, img->Grid.y);
-				ImGui::Text("Size: %.0f x %.0f", img->HW.x, img->HW.y);
 				img->Render();
 			}
 			ImGui::End();
