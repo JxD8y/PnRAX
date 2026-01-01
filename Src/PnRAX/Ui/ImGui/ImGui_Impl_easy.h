@@ -6,8 +6,9 @@
 #include <d3d11.h>
 #include <assert.h>
 #include <iomanip>
-#include <vector>
 #include <ShellScalingApi.h>
+#include <vector>
+#include <map>
 
 #ifdef WIN32
 #pragma comment(lib,"d3d11.lib")
@@ -23,7 +24,7 @@ using namespace std;
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-class ImGuiWindow; //FW declare
+class ImGuiWindow;
 
 namespace Imeasy {
 	extern int width;
@@ -48,6 +49,7 @@ namespace Imeasy {
 		HWND CreateDxWindow(string title, UINT height, UINT width);
 		void ClearDxRenderingTarget();
 
+		void CalculateTileWindowCord(float padding);
 		void RenderTileWindows();
 	}
 }

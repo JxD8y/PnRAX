@@ -32,7 +32,61 @@ namespace Imeasy {
 	void SetRenderingList(vector<ImGuiWindow*> vWindow) {
 		Imeasy::vWindow = vWindow;
 	}
-	void RenderTileWindows(int h, int w);
+
+	void CalculateTileWindowCord(float containerWidth , float curX, float curY, float padding) {
+		std::map<int, float> colWidths;
+		std::map<int, float> rowHeights;
+
+		for (ImGuiWindow* win : Imeasy::vWindow) {
+			if (win->HW.x > colWidths[win->Grid.x]) {
+				colWidths[win->Grid.x] = win->HW.x;
+			}
+
+		}
+		vector<ImGuiWindow*> cvWindow = Imeasy::vWindow;
+		std::sort(cvWindow.begin(), cvWindow.end(), [](ImGuiWindow* a, ImGuiWindow* b) {
+			if(a->Grid.y != b->Grid.y)
+				return a->Grid.y < b->Grid.y;
+			return a->Grid.x < b->Grid.x;
+		});
+		for (ImGuiWindow* win : cvWindow) {
+			float finalX = curX;
+			float finalY = curY;
+			for (auto const& p : colWidths) {
+				if (p.first < win->Grid.x) {
+					finalX += p.second + padding;
+				}
+			}
+
+			if (rowHeights.find(win->Grid.x) == rowHeights.end()) {
+				rowHeights[win->Grid.x] = curY;
+			}
+
+			finalY = rowHeights[win->Grid.x];
+
+			win->ComputedXY.x = finalX;
+			win->ComputedXY.y = finalY;
+			rowHeights[win->Grid.x] += win->HW.y + padding;
+		}
+	}
+	void RenderTileWindows() {
+		for (ImGuiWindow* img : Imeasy::vWindow) {
+			ImGui::SetNextWindowPos(img->ComputedXY, ImGuiCond_Always);
+			ImGui::SetNextWindowSize(img->HW, ImGuiCond_Always);
+
+			ImGuiWindowFlags flags = ImGuiWindowFlags_NoResize |
+				ImGuiWindowFlags_NoMove |
+				ImGuiWindowFlags_NoCollapse |
+				ImGuiWindowFlags_NoSavedSettings;
+
+			if (ImGui::Begin(img->GetTitle().c_str(), nullptr, flags)) {
+				ImGui::Text("Grid: [%d, %d]", img->Grid.x, img->Grid.y);
+				ImGui::Text("Size: %.0f x %.0f", img->HW.x, img->HW.y);
+				img->Render();
+			}
+			ImGui::End();
+		}
+	}
 	void StartRendering(string title, UINT height, UINT width) {
 		if (!Imeasy::CreateDXDevice())
 		{
@@ -83,7 +137,9 @@ namespace Imeasy {
 			ImGui_ImplWin32_NewFrame();
 			ImGui::NewFrame();
 
-			Imeasy::RenderTileWindows(Imeasy::rh,Imeasy::rw);
+			ImGuiViewport* vp = ImGui::GetMainViewport();
+			Imeasy::CalculateTileWindowCord(vp->WorkSize.x,vp->WorkPos.x,vp->WorkPos.y ,0);
+			Imeasy::RenderTileWindows();
 
 			if (Imeasy::rw != 0 && Imeasy::rh != 0)
 			{
@@ -102,36 +158,6 @@ namespace Imeasy {
 		}
 	}
 
-	void RenderTileWindows(int h,int w) {
-		if (Imeasy::vWindow.empty())
-			return;
-		int count = Imeasy::vWindow.size();
-		int cols = ceil(sqrt(count));
-		int rows = ceil(count / cols);
-		ImVec2 cellSz = ImVec2(w / cols, h / rows);
-
-		for (int i = 0; i < count; ++i) {
-			ImGuiWindow* pWin = Imeasy::vWindow[i];
-			int c = i % cols;
-			int r = i / cols;
-
-			ImVec2 cellPos = ImVec2(
-				w + (c * w),
-				h + (r * h)
-			);
-
-			ImGui::SetNextWindowPos(cellPos, ImGuiCond_Always);
-			ImGui::SetNextWindowSize(pWin->GetSize(), ImGuiCond_Always);
-
-			
-			if (ImGui::Begin(pWin->GetTitle().c_str(), nullptr,
-				ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings)) {
-
-				pWin->Render();
-			}
-			ImGui::End();
-		}
-	}
 
 	namespace {
 		LRESULT WndProc(HWND hw, UINT msg, WPARAM wp, LPARAM lp) {
