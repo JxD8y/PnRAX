@@ -107,10 +107,7 @@ namespace Imeasy {
 				ImGuiWindowFlags_NoCollapse |
 				ImGuiWindowFlags_NoSavedSettings;
 
-			if (ImGui::Begin(img->GetTitle().c_str(), nullptr, flags)) {
-				img->Render();
-			}
-			ImGui::End();
+			img->Render();
 		}
 	}
 	void StartRendering(string title, UINT height, UINT width) {

@@ -1,7 +1,4 @@
-#pragma once
-#include "imgui.h"
-#include "imgui_impl_dx11.h"
-#include "imgui_impl_win32.h"
+
 #include <dxgi.h>
 #include <d3d11.h>
 #include <assert.h>
@@ -9,6 +6,10 @@
 #include <ShellScalingApi.h>
 #include <vector>
 #include <map>
+#include <imgui.h>
+#include <imgui_impl_dx11.h>
+#include <imgui_impl_win32.h>
+#pragma once
 
 #ifdef WIN32
 #pragma comment(lib,"d3d11.lib")

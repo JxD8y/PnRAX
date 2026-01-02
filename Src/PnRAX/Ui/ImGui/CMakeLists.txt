@@ -6,4 +6,4 @@ add_library(ImEasy STATIC
 
 find_package(imgui CONFIG REQUIRED)
 
-target_link_libraries(ImEasy PRIVATE imgui::imgui)
+target_link_libraries(ImEasy PUBLIC imgui::imgui)
