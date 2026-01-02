@@ -1,7 +1,11 @@
 ﻿add_executable(Pnrx "PnRAX.cpp")
 add_subdirectory("PnLdr")
 add_subdirectory("Ui")
+if(MSVC)
+    target_compile_options(Pnrx PRIVATE /utf-8)
+endif()
 find_package(capstone CONFIG REQUIRED)
+find_package(fmt REQUIRED)
 
 target_link_libraries(Pnrx PRIVATE capstone::capstone)
 target_link_libraries(Pnrx PRIVATE PnRAXGUI)
