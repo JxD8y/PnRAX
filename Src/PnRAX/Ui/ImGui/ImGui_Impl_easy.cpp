@@ -99,15 +99,17 @@ namespace Imeasy {
 	}
 	void RenderTileWindows() {
 		for (ImGuiWindow* img : Imeasy::vWindow) {
-			ImGui::SetNextWindowPos(img->ComputedXY, ImGuiCond_Always);
-			ImGui::SetNextWindowSize(img->ComputedHW, ImGuiCond_Always);
+			if (img->is_open) {
+				ImGui::SetNextWindowPos(img->ComputedXY, ImGuiCond_Always);
+				ImGui::SetNextWindowSize(img->ComputedHW, ImGuiCond_Always);
 
-			ImGuiWindowFlags flags = ImGuiWindowFlags_NoResize |
-				ImGuiWindowFlags_NoMove |
-				ImGuiWindowFlags_NoCollapse |
-				ImGuiWindowFlags_NoSavedSettings;
+				ImGuiWindowFlags flags = ImGuiWindowFlags_NoResize |
+					ImGuiWindowFlags_NoMove |
+					ImGuiWindowFlags_NoCollapse |
+					ImGuiWindowFlags_NoSavedSettings;
 
-			img->Render();
+				img->Render();
+			}
 		}
 	}
 	void StartRendering(string title, UINT height, UINT width) {

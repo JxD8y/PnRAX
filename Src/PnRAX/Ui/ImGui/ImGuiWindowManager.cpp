@@ -15,17 +15,6 @@ void ImGuiWindowManager::AddWindow(ImGuiWindow* window) {
 		this->m_vWindow.push_back(window);
 	}
 }
-void ImGuiWindowManager::closeWindow(int id) {
-	auto pWin = find_if(this->m_vWindow.begin(), this->m_vWindow.end(), [id](ImGuiWindow* win) {return win->GetId() == id; });
-	if (pWin != this->m_vWindow.end()) {
-		(*pWin)->Close();
-	}
-}
-void ImGuiWindowManager::closeWindow(ImGuiWindow* win) {
-	if (win)
-		win->Close();
-}
-
 void ImGuiWindowManager::StartRendering() {
 	Imeasy::SetRenderingList(this->m_vWindow);
 	Imeasy::StartRendering(this->m_title, this->m_pDim.y, this->m_pDim.x);

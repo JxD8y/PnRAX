@@ -15,19 +15,18 @@ public:
 
 	void SetWindowTitle(string title);
 
-	void Close();
-
 	[[nodiscard]] int GetId();
 	[[nodiscard]] string GetTitle();
 
 	virtual void Render() = 0;
+
+	bool is_open = true;
 
 	ImVec2 HW;
 	ImVec2 ComputedHW;
 	ImVec2 ComputedXY;
 	ImVec2 Grid; // X: COL Y: ROW
 protected:
-	bool is_open = true;
 	int m_id = -1;
 	string m_title = "BLANK_TITLE";
 };

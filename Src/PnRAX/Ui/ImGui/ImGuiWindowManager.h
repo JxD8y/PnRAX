@@ -25,8 +25,6 @@ public:
 	void SetOnCloseHandler(OnCloseHandler onClose);
 	void AddWindow(ImGuiWindow* window);
 
-	void closeWindow(int id);
-	void closeWindow(ImGuiWindow* window);
 	void StartRendering();
 
 private:

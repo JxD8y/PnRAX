@@ -16,7 +16,3 @@ void ImGuiWindow::SetWindowTitle(string title) {
 [[nodiscard]] string ImGuiWindow::GetTitle() {
 	return this->m_title;
 }
-
-void ImGuiWindow::Close() {
-	this->is_open = false;
-}
