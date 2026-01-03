@@ -9,3 +9,4 @@ find_package(fmt REQUIRED)
 
 target_link_libraries(Pnrx PRIVATE capstone::capstone)
 target_link_libraries(Pnrx PRIVATE PnRAXGUI)
+target_link_libraries(Pnrx PRIVATE PnLdr)
