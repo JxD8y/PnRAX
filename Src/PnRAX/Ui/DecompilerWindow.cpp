@@ -23,7 +23,7 @@ void DecompilerWindow::_init_cs() {
     if (cs_open(CS_ARCH_X86, CS_MODE_64, &this->_cs_hnd) != CS_ERR_OK) {
         throw runtime_error("Cannot initiate capstone");
     }
-    cs_option(this->_cs_hnd, CS_OPT_DETAIL, CS_OPT_OFF);
+    cs_option(this->_cs_hnd, CS_OPT_DETAIL, CS_OPT_ON);
 
     if (this->m_gctx.targetData) {
         uint64_t addr = 0;
@@ -43,6 +43,20 @@ void DecompilerWindow::_init_cs() {
         cs_free(pIns, 1);
     }
 }
+const char* get_ptr_size_name(uint8_t size) {
+    switch (size) {
+    case 1:  return "byte ptr";
+    case 2:  return "word ptr";
+    case 4:  return "dword ptr";
+    case 8:  return "qword ptr";
+    case 16: return "xmmword ptr";
+    case 32: return "ymmword ptr";
+    case 64: return "zmmword ptr";
+    case 10: return "tbyte ptr";
+    default: return "";
+    }
+}
+
 void DecompilerWindow::Render() {
 	ImGui::Begin(this->m_title.c_str(), &this->is_open);
     int columns = 3;
@@ -59,7 +73,6 @@ void DecompilerWindow::Render() {
         while (clipper.Step()) {
             for (int i = clipper.DisplayStart; i < clipper.DisplayEnd; i++) {
                 size_t offset = this->_decomp_offset[i];
-
                 const uint8_t* code_ptr = (uint8_t*)this->m_gctx.targetData->pTextSection + offset;
                 size_t code_len = this->m_gctx.targetData->textSectionSize - offset; 
                 uint64_t address = this->_decomp_offset[0] + offset; 
@@ -67,10 +80,11 @@ void DecompilerWindow::Render() {
 
                 ImGui::TableNextRow();
                 if (cs_disasm_iter(this->_cs_hnd, &code_ptr, &code_len, &address, pIns)) {
+                    cs_x86 *pDetail = &(pIns->detail->x86);
 
                     ImGui::TableSetColumnIndex(0);
                     ImGui::PushStyleColor(ImGuiCol_Text, ColorAddress);
-                    ImGui::Text("0x%" PRIx64, pIns->address);
+                    ImGui::Text("0x%" PRIx64, pIns->address); 
                     ImGui::PopStyleColor();
 
                     ImGui::TableSetColumnIndex(1);
@@ -84,7 +98,58 @@ void DecompilerWindow::Render() {
                     ImGui::Text("%s ", pIns->mnemonic);
                     ImGui::SameLine();
                     ImGui::PopStyleColor();
-                    ImGui::Text("%s", pIns->op_str);
+
+                    for (int i = 0; i < pDetail->op_count; i++) {
+                        if (i >= 1) {
+                            ImGui::Text(",");
+                            ImGui::SameLine();
+                        }
+                        cs_x86_op* op = &pDetail->operands[i];
+                        switch (op->type) {
+                            case X86_OP_REG:
+                                ImGui::PushStyleColor(ImGuiCol_Text, ColorReg);
+                                ImGui::Text("%s ", cs_reg_name(this->_cs_hnd,op->reg));
+                                ImGui::SameLine();
+                                ImGui::PopStyleColor();
+                                break;
+
+                            case X86_OP_IMM:
+                                ImGui::PushStyleColor(ImGuiCol_Text, ColorImm);
+                                ImGui::Text("0x%" PRIx64,op->imm);
+                                ImGui::SameLine();
+                                ImGui::PopStyleColor();
+                                break;
+
+                            case X86_OP_MEM:
+                                ImGui::PushStyleColor(ImGuiCol_Text, ColorMemSize);
+                                ImGui::Text("%s",get_ptr_size_name(op->size));
+                                ImGui::PopStyleColor();
+                                ImGui::SameLine();
+                                ImGui::PushStyleColor(ImGuiCol_Text, ColorMem);
+                                ImGui::Text("[");
+                                ImGui::SameLine();
+                                if (op->mem.base != X86_REG_INVALID) {
+                                    ImGui::Text("%s", cs_reg_name(this->_cs_hnd, op->mem.base));
+                                }
+
+                                if (op->mem.index != X86_REG_INVALID) {
+                                    ImGui::SameLine();
+                                    ImGui::Text(" + %s", cs_reg_name(this->_cs_hnd, op->mem.index));
+                                    ImGui::SameLine();
+                                    if (op->mem.scale > 1)
+                                        ImGui::Text("*%d", op->mem.scale);
+
+                                }
+                                ImGui::SameLine();
+                                ImGui::Text("]");
+                                ImGui::PopStyleColor();
+                                ImGui::SameLine();
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+
                 }
                 else {
                     ImGui::TableSetColumnIndex(0);
@@ -103,7 +168,8 @@ void DecompilerWindow::Render() {
                     ImGui::Text("db ", pIns->mnemonic);
                     ImGui::SameLine();
                     ImGui::PopStyleColor();
-                    ImGui::Text("0x%" PRIx64, code_ptr);
+                    ImGui::Text("%02X", code_ptr[offset]);
+                    
                 }
                 cs_free(pIns, 1);
                 

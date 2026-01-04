@@ -18,7 +18,7 @@ int main(int argc, char* argv[]) {
     
     csh ch;
 
-    auto d = PnLdr::OpenFile("test.exe");
+    auto d = PnLdr::OpenFile("hxd.exe");
     
 	gCtx.targetData = d;
     wDecompiler._init_cs();
