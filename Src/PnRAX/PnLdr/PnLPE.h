@@ -12,6 +12,7 @@ public:
 	IMAGE_OPTIONAL_HEADER optionalHeader = { 0 }; //magic addrofentrypoint , imagebase,sectionAlignment, fileAlignment, dataDirectory ( import/export table) 
     vector<IMAGE_SECTION_HEADER> sectionHeaders;
     bool is_64 = false;
+
     //Start of section declarations
 
     char* pTextSection = NULL;
