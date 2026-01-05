@@ -1,5 +1,5 @@
 #pragma once
-
+#include "ImEasyConfig.h"
 #include <dxgi.h>
 #include <d3d11.h>
 #include <assert.h>
@@ -29,32 +29,61 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg
 
 class ImGuiWindow;
 
+struct MessageBoxData {
+	enum class Level {
+		Info,
+		Warn,
+		Error,
+		Success
+	} level = Level::Info;
+
+	std::string title;
+	std::string message;
+	std::vector<std::string> buttons;
+	std::function<void(int)> callback;
+
+	bool isOpen = false;
+};
+
 namespace Imeasy {
 	extern int width;
 	extern int height;
+
+	void ShowMessageBox(const std::string& title, const std::string& message,
+		MessageBoxData::Level lv,
+		const std::vector<std::string>& buttons,
+		std::function<void(int)> callback = nullptr);
+
+	
+
 	void PrintErrorMessage(HRESULT hr);
 	void StartRendering(string title, UINT height, UINT width);
 	void SetRenderingList(vector<ImGuiWindow*> vWin);
 	void SetTopMenu(function<void()> top);
 
-	namespace {
-		LRESULT WndProc(HWND hw, UINT msg, WPARAM wp, LPARAM lp);
-		int rh, rw = 0;
+	namespace __imeasy_internal{
 		bool render = true;
 		ID3D11Device* pdxDev = NULL;
 		ID3D11DeviceContext* pdxDevCtx = NULL;
 		ID3D11RenderTargetView* pRTV = NULL;
 		IDXGISwapChain* pswCh = NULL;
+
 		vector<ImGuiWindow*> vWindow;
 		function<void()> tpHandler;
+		MessageBoxData g_MsgBox;
+
 		HWND hw;
+		int rh, rw = 0;
+
 		bool CreateDXDevice();
 		bool CreateDxSwapChain(HWND hw);
 		bool CreateDxRenderTargetView();
 		HWND CreateDxWindow(string title, UINT height, UINT width);
+		LRESULT WndProc(HWND hw, UINT msg, WPARAM wp, LPARAM lp);
 		void ClearDxRenderingTarget();
 
-		void CalculateTileWindowCord(float padding);
+		void CalculateTileWindowCord(float containerWidth, float containerHeight, float curX, float curY, float padding);
 		void RenderTileWindows();
+		void RenderMessageBox();
 	}
 }

@@ -4,6 +4,7 @@
 #include <iostream>
 
 using namespace std;
+namespace _imeasy = Imeasy::__imeasy_internal;
 
 namespace Imeasy {
 	bool TerminateOnClose = true;
@@ -30,105 +31,25 @@ namespace Imeasy {
 	}
 
 	void SetRenderingList(vector<ImGuiWindow*> vWindow) {
-		Imeasy::vWindow = vWindow;
+		_imeasy::vWindow = vWindow;
 	}
 
-	void CalculateTileWindowCord(float containerWidth, float containerHeight, float curX, float curY, float padding) {
-		std::map<int, float> colBaseWidths;
-		std::map<int, float> colTotalHeights;
-
-		for (ImGuiWindow* win : Imeasy::vWindow) {
-			if (win->HW.x > colBaseWidths[win->Grid.x])
-				colBaseWidths[win->Grid.x] = win->HW.x;
-			if (colTotalHeights.find(win->Grid.x) == colTotalHeights.end()) {
-				colTotalHeights[win->Grid.x] = 0.0f;
-			}
-			colTotalHeights[win->Grid.x] += win->HW.y;
-		}
-		colTotalHeights.clear();
-		std::map<int, int> colItemCounts;
-		for (ImGuiWindow* win : Imeasy::vWindow) {
-			if (win->HW.x > colBaseWidths[win->Grid.x]) colBaseWidths[win->Grid.x] = win->HW.x;
-			colTotalHeights[win->Grid.x] += win->HW.y;
-			colItemCounts[win->Grid.x]++;
-		}
-		for (auto& p : colTotalHeights) {
-			int count = colItemCounts[p.first];
-			if (count > 1) p.second += (count - 1) * padding;
-		}
-		float totalBaseW = 0.0f;
-		for (auto const& p : colBaseWidths) totalBaseW += p.second;
-		float totalPaddingX = (colBaseWidths.size() > 0) ? (colBaseWidths.size() - 1) * padding : 0.0f;
-
-		float maxStackH = 0.0f;
-		for (auto const& p : colTotalHeights) {
-			if (p.second > maxStackH) maxStackH = p.second;
-		}
-		float scaleX = (totalBaseW > 0) ? (containerWidth - totalPaddingX) / totalBaseW : 1.0f;
-		float scaleY = (maxStackH > 0) ? (containerHeight) / maxStackH : 1.0f; 
-
-		std::map<int, float> finalColWidths;
-		for (auto const& p : colBaseWidths) finalColWidths[p.first] = p.second * scaleX;
-
-		std::vector<ImGuiWindow*> cvWindow = Imeasy::vWindow;
-		std::sort(cvWindow.begin(), cvWindow.end(), [](ImGuiWindow* a, ImGuiWindow* b) {
-			if (a->Grid.y != b->Grid.y) return a->Grid.y < b->Grid.y;
-			return a->Grid.x < b->Grid.x;
-			});
-		std::map<int, float> colStackY;
-
-		for (ImGuiWindow* win : cvWindow) {
-			float finalX = curX;
-			for (auto const& p : finalColWidths) {
-				if (p.first < win->Grid.x) {
-					finalX += p.second + padding;
-				}
-			}
-			if (colStackY.find(win->Grid.x) == colStackY.end()) {
-				colStackY[win->Grid.x] = curY;
-			}
-
-			win->ComputedXY.x = finalX;
-			win->ComputedXY.y = colStackY[win->Grid.x];
-
-			win->ComputedHW.x = finalColWidths[win->Grid.x];
-			win->ComputedHW.y = win->HW.y * scaleY;
-
-			colStackY[win->Grid.x] += win->ComputedHW.y + padding;
-		}
-	}
-	void RenderTileWindows() {
-		for (ImGuiWindow* img : Imeasy::vWindow) {
-			if (img->is_open) {
-				ImGui::SetNextWindowPos(img->ComputedXY, ImGuiCond_Always);
-				ImGui::SetNextWindowSize(img->ComputedHW, ImGuiCond_Always);
-				
-				ImGuiWindowFlags flags =
-					ImGuiWindowFlags_NoResize|
-					ImGuiWindowFlags_NoMove |
-					ImGuiWindowFlags_NoCollapse |
-					ImGuiWindowFlags_NoSavedSettings;
-
-				img->Render();
-			}
-		}
-	}
 	
 	void StartRendering(string title, UINT height, UINT width) {
-		if (!Imeasy::CreateDXDevice())
+		if (!_imeasy::CreateDXDevice())
 		{
 			throw exception("failed to create dx dev");
 		}
-		HWND hw = CreateDxWindow(title.c_str(), height, width);
+		HWND hw = _imeasy::CreateDxWindow(title.c_str(), height, width);
 		if (hw == NULL)
 		{
 			throw exception("failed to create window");
 		}
 		ShowWindow(hw, SW_SHOW);
-		if (!CreateDxSwapChain(hw)) {
+		if (!_imeasy::CreateDxSwapChain(hw)) {
 			throw exception("failed to create swap chain");
 		}
-		if (!CreateDxRenderTargetView()) {
+		if (!_imeasy::CreateDxRenderTargetView()) {
 			throw exception("failed to create dx render target view");
 		}
 
@@ -146,12 +67,12 @@ namespace Imeasy {
 
 		ImGui::StyleColorsDark(&style);
 		ImGui_ImplWin32_Init(hw);
-		ImGui_ImplDX11_Init(Imeasy::pdxDev, Imeasy::pdxDevCtx);
+		ImGui_ImplDX11_Init(_imeasy::pdxDev, _imeasy::pdxDevCtx);
 		bool run = true;
 		const float cColor[4] = { 0,0,0,0 };
 		while (run) {
 			MSG msg;
-			while (PeekMessageA(&msg, Imeasy::hw, 0, 0, PM_REMOVE)) {
+			while (PeekMessageA(&msg, _imeasy::hw, 0, 0, PM_REMOVE)) {
 				TranslateMessage(&msg);
 				DispatchMessageA(&msg);
 				if (msg.message == WM_CLOSE)
@@ -163,45 +84,46 @@ namespace Imeasy {
 			ImGui_ImplDX11_NewFrame();
 			ImGui_ImplWin32_NewFrame();
 			ImGui::NewFrame();
-			if (Imeasy::tpHandler != NULL)
-				Imeasy::tpHandler();
+			if (_imeasy::tpHandler != NULL)
+				_imeasy::tpHandler();
 
 			ImGuiViewport* vp = ImGui::GetMainViewport();
-			Imeasy::CalculateTileWindowCord(vp->WorkSize.x,vp->WorkSize.y,vp->WorkPos.x,vp->WorkPos.y ,0);
-			Imeasy::RenderTileWindows();
+			_imeasy::CalculateTileWindowCord(vp->WorkSize.x,vp->WorkSize.y,vp->WorkPos.x,vp->WorkPos.y ,0);
+			_imeasy::RenderTileWindows();
+			_imeasy::RenderMessageBox();
 			
-			if (Imeasy::rw != 0 && Imeasy::rh != 0)
+			if (_imeasy::rw != 0 && _imeasy::rh != 0)
 			{
-				Imeasy::ClearDxRenderingTarget();
-				Imeasy::pswCh->ResizeBuffers(0, Imeasy::rw, Imeasy::rh, DXGI_FORMAT_UNKNOWN, 0);
-				Imeasy::rw = Imeasy::rh = 0;
-				CreateDxRenderTargetView();
+				_imeasy::ClearDxRenderingTarget();
+				_imeasy::pswCh->ResizeBuffers(0, _imeasy::rw, _imeasy::rh, DXGI_FORMAT_UNKNOWN, 0);
+				_imeasy::rw = _imeasy::rh = 0;
+				_imeasy::CreateDxRenderTargetView();
 			}
 
 			ImGui::Render();
-			Imeasy::pdxDevCtx->OMSetRenderTargets(1, &Imeasy::pRTV, NULL);
-			Imeasy::pdxDevCtx->ClearRenderTargetView(Imeasy::pRTV, cColor);
+			_imeasy::pdxDevCtx->OMSetRenderTargets(1, &_imeasy::pRTV, NULL);
+			_imeasy::pdxDevCtx->ClearRenderTargetView(_imeasy::pRTV, cColor);
 			ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
-			Imeasy::pswCh->Present(1, 0);
+			_imeasy::pswCh->Present(1, 0);
 
 		}
 	}
 	void SetTopMenu(function<void()> top) {
-		Imeasy::tpHandler = top;
+		_imeasy::tpHandler = top;
 	}
 
 
-	namespace {
+	namespace __imeasy_internal {
 		LRESULT WndProc(HWND hw, UINT msg, WPARAM wp, LPARAM lp) {
 			if (msg == WM_SIZE) {
 				if (wp == SIZE_MINIMIZED)
 					return 0;
-				Imeasy::width = Imeasy::rw = (UINT)LOWORD(lp);
-				Imeasy::height = Imeasy::rh = (UINT)HIWORD(lp);
+				width = _imeasy::rw = (UINT)LOWORD(lp);
+				height = _imeasy::rh = (UINT)HIWORD(lp);
 				return 0;
 			}
 			if (msg == WM_CLOSE)
-				if (Imeasy::TerminateOnClose) {
+				if (TerminateOnClose) {
 					HANDLE hProc = GetCurrentProcess();
 					TerminateProcess(hProc, 0);
 				}
@@ -218,9 +140,9 @@ namespace Imeasy {
 				NULL,
 				0,
 				D3D11_SDK_VERSION,
-				&Imeasy::pdxDev,
+				&_imeasy::pdxDev,
 				NULL,
-				&Imeasy::pdxDevCtx
+				&_imeasy::pdxDevCtx
 			);
 			if (hr != S_OK)
 			{
@@ -255,7 +177,7 @@ namespace Imeasy {
 			pdDx.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 			pdDx.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
-			hr = factory->CreateSwapChain(Imeasy::pdxDev, &pdDx, &Imeasy::pswCh);
+			hr = factory->CreateSwapChain(_imeasy::pdxDev, &pdDx, &_imeasy::pswCh);
 			if (hr != S_OK) {
 				cout << "Cannot create the swap chain" << std::hex << hr << endl;
 				PrintErrorMessage(hr);
@@ -268,14 +190,14 @@ namespace Imeasy {
 
 		bool CreateDxRenderTargetView() {
 			ID3D11Texture2D* bBuffer = NULL;
-			HRESULT hr = Imeasy::pswCh->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)(&bBuffer));
+			HRESULT hr = _imeasy::pswCh->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)(&bBuffer));
 			if (hr != S_OK) {
 				cout << "Cannot get the back buffer from swap chain" << endl;
 				PrintErrorMessage(hr);
 				return false;
 			}
 
-			hr = Imeasy::pdxDev->CreateRenderTargetView(bBuffer, NULL, &Imeasy::pRTV);
+			hr = _imeasy::pdxDev->CreateRenderTargetView(bBuffer, NULL, &_imeasy::pRTV);
 			if (hr != S_OK) {
 				cout << "Cannot create RTV" << endl;
 				PrintErrorMessage(hr);

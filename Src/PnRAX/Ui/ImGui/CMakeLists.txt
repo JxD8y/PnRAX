@@ -1,7 +1,8 @@
 add_library(ImEasy STATIC
 			ImGuiWindow.cpp
 			ImGui_Impl_easy.cpp
-			ImGuiWindowManager.cpp)
+			ImGuiWindowManager.cpp
+			ImGuiCustomDialog.cpp)
 
 find_package(imgui CONFIG REQUIRED)
 find_package(capstone CONFIG REQUIRED)
