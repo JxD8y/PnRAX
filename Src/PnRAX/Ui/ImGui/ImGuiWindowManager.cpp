@@ -15,7 +15,11 @@ void ImGuiWindowManager::AddWindow(ImGuiWindow* window) {
 		this->m_vWindow.push_back(window);
 	}
 }
+void ImGuiWindowManager::SetTopMenu(TopMenuHandler tpMenu) {
+	this->m_topMenu = tpMenu;
+}
 void ImGuiWindowManager::StartRendering() {
+	Imeasy::SetTopMenu(this->m_topMenu);
 	Imeasy::SetRenderingList(this->m_vWindow);
 	Imeasy::StartRendering(this->m_title, this->m_pDim.y, this->m_pDim.x);
 }

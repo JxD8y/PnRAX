@@ -5,6 +5,7 @@
 #include "Ui/DecompilerWindow.h"
 #include "Ui/GlobalContext.h"
 #include "Ui/ImGui/ImGuiWindowManager.h"
+#include "Ui/TopMenu.h"
 #include "PnLdr/PnLdr.h"
 
 int main(int argc, char* argv[]) {
@@ -22,6 +23,7 @@ int main(int argc, char* argv[]) {
     
 	gCtx.targetData = d;
     wDecompiler._init_cs();
+    wMgr.SetTopMenu(RenderApplicationTopMenu);
     wMgr.AddWindow(&wDecompiler);
     wMgr.StartRendering();
     return 0;

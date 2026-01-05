@@ -3,7 +3,7 @@ add_subdirectory("ImGui")
 add_library(PnRAXGUI STATIC 
 	 "DecompilerWindow.cpp"
 	 "GlobalContext.h"
-	)
+	 "TopMenu.h")
 
 find_package(fmt REQUIRED)
 find_package(imgui CONFIG REQUIRED)

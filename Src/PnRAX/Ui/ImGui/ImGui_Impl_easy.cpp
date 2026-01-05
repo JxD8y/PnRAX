@@ -162,11 +162,12 @@ namespace Imeasy {
 			ImGui_ImplDX11_NewFrame();
 			ImGui_ImplWin32_NewFrame();
 			ImGui::NewFrame();
-
+			if (Imeasy::tpHandler != NULL)
+				Imeasy::tpHandler();
 			ImGuiViewport* vp = ImGui::GetMainViewport();
 			Imeasy::CalculateTileWindowCord(vp->WorkSize.x,vp->WorkSize.y,vp->WorkPos.x,vp->WorkPos.y ,0);
 			Imeasy::RenderTileWindows();
-
+			
 			if (Imeasy::rw != 0 && Imeasy::rh != 0)
 			{
 				Imeasy::ClearDxRenderingTarget();
@@ -182,6 +183,9 @@ namespace Imeasy {
 			Imeasy::pswCh->Present(1, 0);
 
 		}
+	}
+	void SetTopMenu(function<void()> top) {
+		Imeasy::tpHandler = top;
 	}
 
 

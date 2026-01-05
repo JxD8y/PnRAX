@@ -1,3 +1,4 @@
+#pragma once
 
 #include <dxgi.h>
 #include <d3d11.h>
@@ -7,9 +8,10 @@
 #include <vector>
 #include <map>
 #include <imgui.h>
+#include <functional>
 #include <imgui_impl_dx11.h>
 #include <imgui_impl_win32.h>
-#pragma once
+
 
 #ifdef WIN32
 #pragma comment(lib,"d3d11.lib")
@@ -33,6 +35,7 @@ namespace Imeasy {
 	void PrintErrorMessage(HRESULT hr);
 	void StartRendering(string title, UINT height, UINT width);
 	void SetRenderingList(vector<ImGuiWindow*> vWin);
+	void SetTopMenu(function<void()> top);
 
 	namespace {
 		LRESULT WndProc(HWND hw, UINT msg, WPARAM wp, LPARAM lp);
@@ -43,6 +46,7 @@ namespace Imeasy {
 		ID3D11RenderTargetView* pRTV = NULL;
 		IDXGISwapChain* pswCh = NULL;
 		vector<ImGuiWindow*> vWindow;
+		function<void()> tpHandler;
 		HWND hw;
 		bool CreateDXDevice();
 		bool CreateDxSwapChain(HWND hw);
