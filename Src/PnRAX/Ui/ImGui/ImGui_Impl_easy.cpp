@@ -112,6 +112,7 @@ namespace Imeasy {
 			}
 		}
 	}
+	
 	void StartRendering(string title, UINT height, UINT width) {
 		if (!Imeasy::CreateDXDevice())
 		{

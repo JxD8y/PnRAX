@@ -58,7 +58,11 @@ const char* get_ptr_size_name(uint8_t size) {
 }
 
 void DecompilerWindow::Render() {
-	ImGui::Begin(this->m_title.c_str(), &this->is_open);
+    ImGui::PushStyleColor(ImGuiCol_TitleBg, ImVec4(.80f, 0.65f, 0.2f, 1.0f));
+    ImGui::PushStyleColor(ImGuiCol_TitleBgActive, ImVec4(1.0f, 0.65f, 0.2f, 1.0f));
+    ImGui::PushStyleColor(ImGuiCol_TitleBgCollapsed, ImVec4(1.0f, 0.65f, 0.2f, 1.0f));
+	ImGui::Begin(this->m_title.c_str(), &this->is_open,ImGuiWindowFlags_NoCollapse|ImGuiWindowFlags_NoResize);
+    ImGui::PopStyleColor(3);
     int columns = 3;
 
     ImGuiTableFlags flags =  ImGuiTableFlags_Resizable | ImGuiTableFlags_ScrollY;
