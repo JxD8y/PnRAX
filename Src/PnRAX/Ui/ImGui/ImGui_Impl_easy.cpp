@@ -102,8 +102,9 @@ namespace Imeasy {
 			if (img->is_open) {
 				ImGui::SetNextWindowPos(img->ComputedXY, ImGuiCond_Always);
 				ImGui::SetNextWindowSize(img->ComputedHW, ImGuiCond_Always);
-
-				ImGuiWindowFlags flags = ImGuiWindowFlags_NoResize |
+				
+				ImGuiWindowFlags flags =
+					ImGuiWindowFlags_NoResize|
 					ImGuiWindowFlags_NoMove |
 					ImGuiWindowFlags_NoCollapse |
 					ImGuiWindowFlags_NoSavedSettings;
@@ -164,6 +165,7 @@ namespace Imeasy {
 			ImGui::NewFrame();
 			if (Imeasy::tpHandler != NULL)
 				Imeasy::tpHandler();
+
 			ImGuiViewport* vp = ImGui::GetMainViewport();
 			Imeasy::CalculateTileWindowCord(vp->WorkSize.x,vp->WorkSize.y,vp->WorkPos.x,vp->WorkPos.y ,0);
 			Imeasy::RenderTileWindows();

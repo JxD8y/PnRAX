@@ -1,3 +1,4 @@
+#pragma once
 #include "ImGui_Impl_easy.h"
 #include <functional>
 #include <stdexcept>
