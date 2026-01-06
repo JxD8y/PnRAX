@@ -43,13 +43,13 @@ void Imeasy::__imeasy_internal::RenderMessageBox() {
     }
     
     if (ImGui::BeginPopupModal(g_MsgBox.title.c_str(), nullptr,ImGuiWindowFlags_AlwaysAutoResize| ImGuiWindowFlags_NoMove)) {
-        ImGui::Dummy(ImVec2(0, Imeasy::height / 10));
+        ImGui::Dummy(ImVec2(0, 20));
 
-        ImGui::SetWindowFontScale(1.5f);
+        ImGui::SetWindowFontScale(1.2f);
         ImGui::Text("%s", g_MsgBox.message.c_str());
         ImGui::SetWindowFontScale(1);
 
-        ImGui::Dummy(ImVec2(Imeasy::width/2, Imeasy::height / 10));
+        ImGui::Dummy(ImVec2(Imeasy::width/2, 20));
 
         ImGui::SetWindowFontScale(1.1f);
         ImGui::PushStyleColor(ImGuiCol_Button, ColorAccent);
