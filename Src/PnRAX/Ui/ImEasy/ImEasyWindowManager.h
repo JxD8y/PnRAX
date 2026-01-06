@@ -11,14 +11,14 @@ class ImEasyWindow;
 
 #define DEF_BG_COL ImColor(0,0,0,0)
 
-class ImGuiWindowManager {
+class ImEasyWindowManager {
 public: 
 	using OnCloseHandler = function<void()>;
 	using TopMenuHandler = function<void()>;
 
-	explicit ImGuiWindowManager(string title, ImVec2 perfDim);
-	ImGuiWindowManager(const ImGuiWindowManager&) = delete;
-	ImGuiWindowManager(const ImGuiWindowManager&&) = delete;
+	explicit ImEasyWindowManager(string title, ImVec2 perfDim);
+	ImEasyWindowManager(const ImEasyWindowManager&) = delete;
+	ImEasyWindowManager(const ImEasyWindowManager&&) = delete;
 
 	void SetTopMenu(TopMenuHandler tpMenu);
 	void SetOnCloseHandler(OnCloseHandler onClose);

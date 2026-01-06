@@ -17,7 +17,7 @@ public:
 	void SetWindowTitle(string title);
 
 	[[nodiscard]] int GetId();
-	[[nodiscard]] string GetTitle();
+	[[nodiscard]] virtual string GetTitle();
 
 	virtual void Render() = 0;
 
