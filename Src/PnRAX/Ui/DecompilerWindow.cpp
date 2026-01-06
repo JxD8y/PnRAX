@@ -1,17 +1,17 @@
 #include "DecompilerWindow.h"
 
-DecompilerWindow::DecompilerWindow(GlobalContext& ctx,ImVec2 grid)
-:ImGuiWindow("Decompiler - ",grid), m_gctx(ctx)
+DecompilerWindow::DecompilerWindow(GlobalContext& ctx,ImVec2 grid, ImVec2 rec )
+:ImEasyWindow("Decompiler: ",grid), m_gctx(ctx)
 {
-	this->SetWindowTitle(fmt::format("Decompiler - {}##{}", this->m_gctx.targetName, this->m_id));
+    this->HW = rec;
+    this->_cs_hnd = -1;
+	this->SetWindowTitle(fmt::format("Decompiler: {}##{}", this->m_gctx.targetName, this->m_id));
 }
 
 DecompilerWindow::~DecompilerWindow() {
     cs_close(&this->_cs_hnd);
 }
 void RenderBytes(const uint8_t* bytes, uint16_t size) {
-    // Render up to 8 bytes per instruction to keep it clean
-    // You can increase this limit if you want
     char buffer[32];
     char* p = buffer;
     for (int i = 0; i < size && i < 8; i++) {
@@ -61,14 +61,14 @@ void DecompilerWindow::Render() {
     ImGui::PushStyleColor(ImGuiCol_TitleBg, ImVec4(.80f, 0.65f, 0.2f, 1.0f));
     ImGui::PushStyleColor(ImGuiCol_TitleBgActive, ImVec4(1.0f, 0.65f, 0.2f, 1.0f));
     ImGui::PushStyleColor(ImGuiCol_TitleBgCollapsed, ImVec4(1.0f, 0.65f, 0.2f, 1.0f));
-	ImGui::Begin(this->m_title.c_str(), NULL ,ImGuiWindowFlags_NoCollapse|ImGuiWindowFlags_NoResize);
+	ImGui::Begin(this->m_title.c_str(), NULL ,ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize);
     ImGui::PopStyleColor(3);
     int columns = 3;
 
     ImGuiTableFlags flags =  ImGuiTableFlags_Resizable | ImGuiTableFlags_ScrollY;
     if (ImGui::BeginTable("DisassemblyTable", columns, flags)) { 
         ImGui::TableSetupColumn("Address", ImGuiTableColumnFlags_WidthFixed, 80.0f);
-        ImGui::TableSetupColumn("Bytes", ImGuiTableColumnFlags_WidthFixed, 100.0f);
+        ImGui::TableSetupColumn("Bytes", ImGuiTableColumnFlags_WidthFixed, 80.0f);
         ImGui::TableSetupColumn("Assembly", ImGuiTableColumnFlags_WidthStretch);
         ImGui::TableHeadersRow();
 
@@ -98,7 +98,10 @@ void DecompilerWindow::Render() {
 
                     int col_idx = 2;
                     ImGui::TableSetColumnIndex(col_idx);
-                    ImGui::PushStyleColor(ImGuiCol_Text, ColorMnemonic);
+                    if(this->m_gctx.isDark)
+                        ImGui::PushStyleColor(ImGuiCol_Text, ColorMnemonicDark);
+                    else
+                        ImGui::PushStyleColor(ImGuiCol_Text, ColorMnemonicLight);
                     ImGui::Text("%s ", pIns->mnemonic);
                     ImGui::SameLine();
                     ImGui::PopStyleColor();
@@ -133,16 +136,19 @@ void DecompilerWindow::Render() {
                                 ImGui::Text("[");
                                 ImGui::SameLine();
                                 if (op->mem.base != X86_REG_INVALID) {
-                                    ImGui::Text("%s", cs_reg_name(this->_cs_hnd, op->mem.base));
+                                    auto rgName = cs_reg_name(this->_cs_hnd, op->mem.base);
+                                    ImGui::Text("%s", rgName);
+                                    if (op->mem.index != X86_REG_INVALID) {
+                                        ImGui::SameLine();
+                                        ImGui::Text(" + %s", cs_reg_name(this->_cs_hnd, op->mem.index));
+                                        ImGui::SameLine();
+                                        if (op->mem.scale > 1)
+                                            ImGui::Text("*%d", op->mem.scale);
+
+                                    }
                                 }
-
-                                if (op->mem.index != X86_REG_INVALID) {
-                                    ImGui::SameLine();
-                                    ImGui::Text(" + %s", cs_reg_name(this->_cs_hnd, op->mem.index));
-                                    ImGui::SameLine();
-                                    if (op->mem.scale > 1)
-                                        ImGui::Text("*%d", op->mem.scale);
-
+                                else {
+                                    ImGui::Text("0x%" PRIx64 ,op->mem.disp);
                                 }
                                 ImGui::SameLine();
                                 ImGui::Text("]");
