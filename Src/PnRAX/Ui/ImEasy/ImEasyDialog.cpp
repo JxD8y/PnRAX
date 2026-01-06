@@ -2,6 +2,12 @@
 
 MessageBoxData Imeasy::__imeasy_internal::g_MsgBox;
 
+bool IsDarkMode() {//Counter-intuitive function to see how bright the window is to decide if its dark
+    ImVec4 bg = ImGui::GetStyle().Colors[ImGuiCol_WindowBg];
+    float luminance = (bg.x * 0.299f) + (bg.y * 0.587f) + (bg.z * 0.114f);
+    return luminance < 0.5f;
+}
+
 void Imeasy::ShowMessageBox(const std::string& title, const std::string& message,
     MessageBoxData::Level lv,
 	const std::vector<std::string>& buttons,
@@ -49,10 +55,14 @@ void Imeasy::__imeasy_internal::RenderMessageBox() {
         ImGui::Text("%s", g_MsgBox.message.c_str());
         ImGui::SetWindowFontScale(1);
 
-        ImGui::Dummy(ImVec2(Imeasy::width/2, 20));
+        ImGui::Dummy(ImVec2(Imeasy::width/4, 20));
 
         ImGui::SetWindowFontScale(1.1f);
-        ImGui::PushStyleColor(ImGuiCol_Button, ColorAccent);
+        
+        if(IsDarkMode())
+            ImGui::PushStyleColor(ImGuiCol_Button, ColorAccentDark);
+        else
+            ImGui::PushStyleColor(ImGuiCol_Button, ColorAccentLight);
 
         ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, ElementCornerRadius);
         ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(15, 5));

@@ -3,7 +3,8 @@
 #define ElementCornerRadius 5.0f
 #define DialogCornerRadius 7.0f
 
-#define ColorAccent IM_COL32(51,51,51,255)
+#define ColorAccentDark IM_COL32(51,51,51,255)
+#define ColorAccentLight IM_COL32(150,150,150 ,255)
 
 //Begin: MessageBox Colors
 #define ColorOrangeWarn ImVec4(0.90f, 0.45f, 0.10f, 1.0f)
