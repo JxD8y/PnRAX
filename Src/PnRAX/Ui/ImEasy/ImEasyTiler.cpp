@@ -1,10 +1,12 @@
-#include "ImGui_Impl_easy.h"
+#include "ImEasy.h"
+#include "ImEasyWindow.h"
+#include <algorithm>
 
 void Imeasy::__imeasy_internal::CalculateTileWindowCord(float containerWidth, float containerHeight, float curX, float curY, float padding) {
 	std::map<int, float> colBaseWidths;
 	std::map<int, float> colTotalHeights;
 
-	for (ImGuiWindow* win : Imeasy::vWindow) {
+	for (ImGuiWindow* win : vWindow) {
 		if (win->HW.x > colBaseWidths[win->Grid.x])
 			colBaseWidths[win->Grid.x] = win->HW.x;
 		if (colTotalHeights.find(win->Grid.x) == colTotalHeights.end()) {
@@ -14,7 +16,7 @@ void Imeasy::__imeasy_internal::CalculateTileWindowCord(float containerWidth, fl
 	}
 	colTotalHeights.clear();
 	std::map<int, int> colItemCounts;
-	for (ImGuiWindow* win : Imeasy::vWindow) {
+	for (ImGuiWindow* win : vWindow) {
 		if (win->HW.x > colBaseWidths[win->Grid.x]) colBaseWidths[win->Grid.x] = win->HW.x;
 		colTotalHeights[win->Grid.x] += win->HW.y;
 		colItemCounts[win->Grid.x]++;
@@ -37,7 +39,7 @@ void Imeasy::__imeasy_internal::CalculateTileWindowCord(float containerWidth, fl
 	std::map<int, float> finalColWidths;
 	for (auto const& p : colBaseWidths) finalColWidths[p.first] = p.second * scaleX;
 
-	std::vector<ImGuiWindow*> cvWindow = Imeasy::vWindow;
+	std::vector<ImGuiWindow*> cvWindow = vWindow;
 	std::sort(cvWindow.begin(), cvWindow.end(), [](ImGuiWindow* a, ImGuiWindow* b) {
 		if (a->Grid.y != b->Grid.y) return a->Grid.y < b->Grid.y;
 		return a->Grid.x < b->Grid.x;
@@ -66,7 +68,7 @@ void Imeasy::__imeasy_internal::CalculateTileWindowCord(float containerWidth, fl
 }
 
 void Imeasy::__imeasy_internal::RenderTileWindows() {
-	for (ImGuiWindow* img : Imeasy::vWindow) {
+	for (ImGuiWindow* img : vWindow) {
 		if (img->is_open) {
 			ImGui::SetNextWindowPos(img->ComputedXY, ImGuiCond_Always);
 			ImGui::SetNextWindowSize(img->ComputedHW, ImGuiCond_Always);

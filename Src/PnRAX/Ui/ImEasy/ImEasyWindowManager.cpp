@@ -1,5 +1,5 @@
-#include "ImGuiWindowManager.h"
-#include "ImGuiWindow.h"
+#include "ImEasyWindowManager.h"
+#include "ImEasyWindow.h"
 
 ImGuiWindowManager::ImGuiWindowManager(string title, ImVec2 perDim): m_title(title),m_pDim(perDim)  {
 	this->m_bgColor = DEF_BG_COL;

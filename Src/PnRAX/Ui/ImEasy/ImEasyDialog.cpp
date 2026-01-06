@@ -1,17 +1,18 @@
-#include "ImGui_Impl_easy.h"
+#include "ImEasy.h"
 
+MessageBoxData Imeasy::__imeasy_internal::g_MsgBox;
 
 void Imeasy::ShowMessageBox(const std::string& title, const std::string& message,
     MessageBoxData::Level lv,
 	const std::vector<std::string>& buttons,
 	std::function<void(int)> callback) {
 
-    g_MsgBox.level = lv;
-    g_MsgBox.title = title;
-    g_MsgBox.message = message;
-    g_MsgBox.buttons = buttons;
-    g_MsgBox.callback = callback;
-    g_MsgBox.isOpen = true;
+    __imeasy_internal::g_MsgBox.level = lv;
+    __imeasy_internal::g_MsgBox.title = title;
+    __imeasy_internal::g_MsgBox.message = message;
+    __imeasy_internal::g_MsgBox.buttons = buttons;
+    __imeasy_internal::g_MsgBox.callback = callback;
+    __imeasy_internal::g_MsgBox.isOpen = true;
 
 }
 void Imeasy::__imeasy_internal::RenderMessageBox() {

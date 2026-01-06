@@ -1,4 +1,4 @@
-#include "ImGuiWindow.h"
+#include "ImEasyWindow.h"
 
 ImGuiWindow::ImGuiWindow(string title,ImVec2 grid, ImVec2 rec){
 	this->m_title = title;

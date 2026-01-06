@@ -1,4 +1,5 @@
 #pragma once
+
 #include "ImEasyConfig.h"
 #include <dxgi.h>
 #include <d3d11.h>
@@ -54,26 +55,24 @@ namespace Imeasy {
 		const std::vector<std::string>& buttons,
 		std::function<void(int)> callback = nullptr);
 
-	
-
 	void PrintErrorMessage(HRESULT hr);
 	void StartRendering(string title, UINT height, UINT width);
 	void SetRenderingList(vector<ImGuiWindow*> vWin);
 	void SetTopMenu(function<void()> top);
 
 	namespace __imeasy_internal{
-		bool render = true;
-		ID3D11Device* pdxDev = NULL;
-		ID3D11DeviceContext* pdxDevCtx = NULL;
-		ID3D11RenderTargetView* pRTV = NULL;
-		IDXGISwapChain* pswCh = NULL;
+		extern bool render;
 
-		vector<ImGuiWindow*> vWindow;
-		function<void()> tpHandler;
-		MessageBoxData g_MsgBox;
+		extern ID3D11Device* pdxDev;
+		extern ID3D11DeviceContext* pdxDevCtx;
+		extern ID3D11RenderTargetView* pRTV;
+		extern IDXGISwapChain* pswCh;
 
-		HWND hw;
-		int rh, rw = 0;
+		extern vector<ImGuiWindow*> vWindow;
+		extern function<void()> tpHandler;
+		extern MessageBoxData g_MsgBox;
+		extern HWND hw;
+		extern int rh, rw;
 
 		bool CreateDXDevice();
 		bool CreateDxSwapChain(HWND hw);

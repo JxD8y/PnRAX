@@ -1,5 +1,5 @@
-#include "ImGui_Impl_easy.h"
-#include "ImGuiWindow.h"
+#include "ImEasyWindow.h"
+
 #include <algorithm>
 #include <iostream>
 
@@ -114,6 +114,19 @@ namespace Imeasy {
 
 
 	namespace __imeasy_internal {
+
+		bool render = true;
+
+		ID3D11Device* pdxDev = NULL;
+		ID3D11DeviceContext* pdxDevCtx = NULL;
+		ID3D11RenderTargetView* pRTV = NULL;
+		IDXGISwapChain* pswCh = NULL;
+
+		vector<ImGuiWindow*> vWindow;
+		function<void()> tpHandler;
+		HWND hw;
+		int rh, rw = 0;
+
 		LRESULT WndProc(HWND hw, UINT msg, WPARAM wp, LPARAM lp) {
 			if (msg == WM_SIZE) {
 				if (wp == SIZE_MINIMIZED)

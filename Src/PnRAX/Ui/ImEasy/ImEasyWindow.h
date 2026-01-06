@@ -1,5 +1,5 @@
 #pragma once
-#include "ImGui_Impl_easy.h"
+#include "ImEasy.h"
 #include <functional>
 #include <stdexcept>
 
