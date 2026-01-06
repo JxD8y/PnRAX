@@ -28,7 +28,7 @@ using namespace std;
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-class ImGuiWindow;
+class ImEasyWindow;
 
 struct MessageBoxData {
 	enum class Level {
@@ -57,7 +57,7 @@ namespace Imeasy {
 
 	void PrintErrorMessage(HRESULT hr);
 	void StartRendering(string title, UINT height, UINT width);
-	void SetRenderingList(vector<ImGuiWindow*> vWin);
+	void SetRenderingList(vector<ImEasyWindow*> vWin);
 	void SetTopMenu(function<void()> top);
 
 	namespace __imeasy_internal{
@@ -68,7 +68,7 @@ namespace Imeasy {
 		extern ID3D11RenderTargetView* pRTV;
 		extern IDXGISwapChain* pswCh;
 
-		extern vector<ImGuiWindow*> vWindow;
+		extern vector<ImEasyWindow*> vWindow;
 		extern function<void()> tpHandler;
 		extern MessageBoxData g_MsgBox;
 		extern HWND hw;

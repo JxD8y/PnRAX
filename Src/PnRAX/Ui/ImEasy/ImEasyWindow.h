@@ -6,13 +6,13 @@
 #define IMG_DEF_HW ImVec2(800,600)
 #define IMG_DEF_XY ImVec2(0,0)
 
-class ImGuiWindow { //Base class
+class ImEasyWindow { //Base class
 public:
 
-	explicit ImGuiWindow(string title,ImVec2 grid,ImVec2 rec = IMG_DEF_HW);
-	ImGuiWindow(ImGuiWindow& cObj) = delete;
-	ImGuiWindow(ImGuiWindow&& mObj) = delete;
-	virtual ~ImGuiWindow() = default;
+	explicit ImEasyWindow(string title,ImVec2 grid,ImVec2 rec = IMG_DEF_HW);
+	ImEasyWindow(ImEasyWindow& cObj) = delete;
+	ImEasyWindow(ImEasyWindow&& mObj) = delete;
+	virtual ~ImEasyWindow() = default;
 
 	void SetWindowTitle(string title);
 

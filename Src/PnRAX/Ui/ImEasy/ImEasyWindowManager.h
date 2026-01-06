@@ -7,7 +7,7 @@
 
 using namespace std;
 
-class ImGuiWindow;
+class ImEasyWindow;
 
 #define DEF_BG_COL ImColor(0,0,0,0)
 
@@ -22,13 +22,13 @@ public:
 
 	void SetTopMenu(TopMenuHandler tpMenu);
 	void SetOnCloseHandler(OnCloseHandler onClose);
-	void AddWindow(ImGuiWindow* window);
+	void AddWindow(ImEasyWindow* window);
 
 	void StartRendering();
 
 private:
 	string m_title;
-	vector<ImGuiWindow*> m_vWindow;
+	vector<ImEasyWindow*> m_vWindow;
 	ImVec2 m_pDim;
 	ImColor m_bgColor;
 	OnCloseHandler m_onClosed;

@@ -30,7 +30,7 @@ namespace Imeasy {
 		}
 	}
 
-	void SetRenderingList(vector<ImGuiWindow*> vWindow) {
+	void SetRenderingList(vector<ImEasyWindow*> vWindow) {
 		_imeasy::vWindow = vWindow;
 	}
 
@@ -122,7 +122,7 @@ namespace Imeasy {
 		ID3D11RenderTargetView* pRTV = NULL;
 		IDXGISwapChain* pswCh = NULL;
 
-		vector<ImGuiWindow*> vWindow;
+		vector<ImEasyWindow*> vWindow;
 		function<void()> tpHandler;
 		HWND hw;
 		int rh, rw = 0;

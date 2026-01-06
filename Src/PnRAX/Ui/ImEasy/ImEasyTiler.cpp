@@ -6,7 +6,9 @@ void Imeasy::__imeasy_internal::CalculateTileWindowCord(float containerWidth, fl
 	std::map<int, float> colBaseWidths;
 	std::map<int, float> colTotalHeights;
 
-	for (ImGuiWindow* win : vWindow) {
+	for (ImEasyWindow* win : vWindow) {
+		if (!win->is_open)
+			continue;
 		if (win->HW.x > colBaseWidths[win->Grid.x])
 			colBaseWidths[win->Grid.x] = win->HW.x;
 		if (colTotalHeights.find(win->Grid.x) == colTotalHeights.end()) {
@@ -16,7 +18,9 @@ void Imeasy::__imeasy_internal::CalculateTileWindowCord(float containerWidth, fl
 	}
 	colTotalHeights.clear();
 	std::map<int, int> colItemCounts;
-	for (ImGuiWindow* win : vWindow) {
+	for (ImEasyWindow* win : vWindow) {
+		if (!win->is_open)
+			continue;
 		if (win->HW.x > colBaseWidths[win->Grid.x]) colBaseWidths[win->Grid.x] = win->HW.x;
 		colTotalHeights[win->Grid.x] += win->HW.y;
 		colItemCounts[win->Grid.x]++;
@@ -39,14 +43,18 @@ void Imeasy::__imeasy_internal::CalculateTileWindowCord(float containerWidth, fl
 	std::map<int, float> finalColWidths;
 	for (auto const& p : colBaseWidths) finalColWidths[p.first] = p.second * scaleX;
 
-	std::vector<ImGuiWindow*> cvWindow = vWindow;
-	std::sort(cvWindow.begin(), cvWindow.end(), [](ImGuiWindow* a, ImGuiWindow* b) {
+	std::vector<ImEasyWindow*> cvWindow = vWindow;
+	std::sort(cvWindow.begin(), cvWindow.end(), [](ImEasyWindow* a, ImEasyWindow* b) {
+		if(!a->is_open)
+			return false;
 		if (a->Grid.y != b->Grid.y) return a->Grid.y < b->Grid.y;
 		return a->Grid.x < b->Grid.x;
 		});
 	std::map<int, float> colStackY;
 
-	for (ImGuiWindow* win : cvWindow) {
+	for (ImEasyWindow* win : cvWindow) {
+		if (!win->is_open)
+			continue;
 		float finalX = curX;
 		for (auto const& p : finalColWidths) {
 			if (p.first < win->Grid.x) {
@@ -68,7 +76,7 @@ void Imeasy::__imeasy_internal::CalculateTileWindowCord(float containerWidth, fl
 }
 
 void Imeasy::__imeasy_internal::RenderTileWindows() {
-	for (ImGuiWindow* img : vWindow) {
+	for (ImEasyWindow* img : vWindow) {
 		if (img->is_open) {
 			ImGui::SetNextWindowPos(img->ComputedXY, ImGuiCond_Always);
 			ImGui::SetNextWindowSize(img->ComputedHW, ImGuiCond_Always);

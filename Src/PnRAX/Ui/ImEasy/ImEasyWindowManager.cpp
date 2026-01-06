@@ -10,8 +10,8 @@ void ImGuiWindowManager::SetOnCloseHandler(OnCloseHandler onClose) {
 	}
 	this->m_onClosed = onClose;
 }
-void ImGuiWindowManager::AddWindow(ImGuiWindow* window) {
-	if (!any_of(this->m_vWindow.begin(), this->m_vWindow.end(), [window](ImGuiWindow* win) {return win->GetId() == window->GetId(); })) {
+void ImGuiWindowManager::AddWindow(ImEasyWindow* window) {
+	if (!any_of(this->m_vWindow.begin(), this->m_vWindow.end(), [window](ImEasyWindow* win) {return win->GetId() == window->GetId(); })) {
 		this->m_vWindow.push_back(window);
 	}
 }
