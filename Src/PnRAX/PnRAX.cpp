@@ -1,30 +1,41 @@
-﻿#include <iostream>
-#include <capstone/capstone.h>
-#include <iomanip>
-
+﻿#include "Ui/ImEasy/ImEasyWindowManager.h"
 #include "Ui/DecompilerWindow.h"
+#include "Ui/PEViewer.h"
+#include "Ui/IETableWindow.h"
 #include "Ui/GlobalContext.h"
-#include "Ui/ImGui/ImGuiWindowManager.h"
 #include "Ui/TopMenu.h"
 #include "PnLdr/PnLdr.h"
 
+#include <iostream>
+#include <capstone/capstone.h>
+#include <iomanip>
+
+
 int main(int argc, char* argv[]) {
     
-    ImGuiWindowManager wMgr("PnRAX", ImVec2(800,600));
+    ImEasyWindowManager wMgr("PnRAX", ImVec2(1200,700));
     GlobalContext gCtx;
     gCtx.targetName = "TEST_TARGET.exe";
 
-    DecompilerWindow wDecompiler(gCtx,ImVec2(0,0));
+    DecompilerWindow wDecompiler(gCtx,ImVec2(0,0),ImVec2(800,700));
+    PEViewerWindow wPEViewer(gCtx, ImVec2(1, 0),ImVec2(400,300));
+	IETableWindow wImportTable(gCtx, ImVec2(2, 0), true, ImVec2(400, 700));
+	IETableWindow wExportTable(gCtx, ImVec2(1, 1), false, ImVec2(400, 400));
+
+	gCtx.pDecompilerWindow = &wDecompiler;
+	gCtx.pPEViewerWindow = &wPEViewer;
+	gCtx.pImportTableWindow = &wImportTable;
+	gCtx.pExportTableWindow = &wExportTable;
     
-    
+    TopMenu::g_ctx = &gCtx;
+
     csh ch;
 
-    auto d = PnLdr::OpenFile("hxd.exe");
-    
-	gCtx.targetData = d;
-    wDecompiler._init_cs();
-    wMgr.SetTopMenu(RenderApplicationTopMenu);
+    wMgr.SetTopMenu(TopMenu::RenderApplicationTopMenu);
     wMgr.AddWindow(&wDecompiler);
+    wMgr.AddWindow(&wImportTable);
+    wMgr.AddWindow(&wExportTable);
+    wMgr.AddWindow(&wPEViewer);
     wMgr.StartRendering();
     return 0;
 }
