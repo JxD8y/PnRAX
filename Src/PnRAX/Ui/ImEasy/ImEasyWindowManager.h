@@ -23,10 +23,12 @@ public:
 	void SetTopMenu(TopMenuHandler tpMenu);
 	void SetOnCloseHandler(OnCloseHandler onClose);
 	void AddWindow(ImEasyWindow* window);
-
+	void SetWin32Icons(HICON icon, HICON smallIco);
 	void StartRendering();
 
 private:
+	HICON hIcon = NULL;
+	HICON hIconSmall = NULL;
 	string m_title;
 	vector<ImEasyWindow*> m_vWindow;
 	ImVec2 m_pDim;

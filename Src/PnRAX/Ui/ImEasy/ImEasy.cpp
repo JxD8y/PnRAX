@@ -35,12 +35,12 @@ namespace Imeasy {
 	}
 
 	
-	void StartRendering(string title, UINT height, UINT width) {
+	void StartRendering(string title, UINT height, UINT width,HICON ico, HICON  smallIco) {
 		if (!_imeasy::CreateDXDevice())
 		{
 			throw exception("failed to create dx dev");
 		}
-		HWND hw = _imeasy::CreateDxWindow(title.c_str(), height, width);
+		HWND hw = _imeasy::CreateDxWindow(title.c_str(), height, width,ico,smallIco);
 		if (hw == NULL)
 		{
 			throw exception("failed to create window");
@@ -217,13 +217,20 @@ namespace Imeasy {
 			return true;
 		}
 
-		HWND CreateDxWindow(string title, UINT height, UINT width) {
+		HWND CreateDxWindow(string title, UINT height, UINT width, HICON icon, HICON smallIco) {
 			SetProcessDpiAwareness(PROCESS_PER_MONITOR_DPI_AWARE);
 			WNDCLASSA wcx = {};
 			wcx.hInstance = GetModuleHandleA(NULL);
 			wcx.lpszClassName = title.c_str();
 			wcx.lpfnWndProc = WndProc;
+
+			if (icon != NULL && smallIco != NULL) {
+				wcx.hIcon = icon;
+				//ignored the small
+			}
+
 			RegisterClassA(&wcx);
+
 			HWND hw = CreateWindowExA(0, wcx.lpszClassName, title.c_str(), WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, width, height, NULL, NULL, wcx.hInstance, NULL);
 			return hw;
 		}

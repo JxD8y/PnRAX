@@ -56,7 +56,7 @@ namespace Imeasy {
 		std::function<void(int)> callback = nullptr);
 
 	void PrintErrorMessage(HRESULT hr);
-	void StartRendering(string title, UINT height, UINT width);
+	void StartRendering(string title, UINT height, UINT width,HICON ico = NULL,HICON smallIco = NULL);
 	void SetRenderingList(vector<ImEasyWindow*> vWin);
 	void SetTopMenu(function<void()> top);
 
@@ -77,7 +77,7 @@ namespace Imeasy {
 		bool CreateDXDevice();
 		bool CreateDxSwapChain(HWND hw);
 		bool CreateDxRenderTargetView();
-		HWND CreateDxWindow(string title, UINT height, UINT width);
+		HWND CreateDxWindow(string title, UINT height, UINT width,HICON ico, HICON smallIco);
 		LRESULT WndProc(HWND hw, UINT msg, WPARAM wp, LPARAM lp);
 		void ClearDxRenderingTarget();
 

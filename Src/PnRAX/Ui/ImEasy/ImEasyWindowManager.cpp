@@ -21,5 +21,9 @@ void ImEasyWindowManager::SetTopMenu(TopMenuHandler tpMenu) {
 void ImEasyWindowManager::StartRendering() {
 	Imeasy::SetTopMenu(this->m_topMenu);
 	Imeasy::SetRenderingList(this->m_vWindow);
-	Imeasy::StartRendering(this->m_title, this->m_pDim.y, this->m_pDim.x);
+	Imeasy::StartRendering(this->m_title, this->m_pDim.y, this->m_pDim.x,this->hIcon,this->hIconSmall);
+}
+void ImEasyWindowManager::SetWin32Icons(HICON icon, HICON smallIco) {
+	this->hIcon = icon;
+	this->hIconSmall = smallIco;
 }
