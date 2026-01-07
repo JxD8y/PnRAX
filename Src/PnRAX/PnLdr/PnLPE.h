@@ -1,6 +1,7 @@
 #pragma once
 #include <winnt.h>
 #include <vector>
+#include <map>
 
 using namespace std;
 
@@ -11,6 +12,9 @@ public:
 	IMAGE_NT_HEADERS ntHeader = { 0 }; //signature: PE\0\0	machine , numberofsections , sizeofoptionalheader
 	IMAGE_OPTIONAL_HEADER optionalHeader = { 0 }; //magic addrofentrypoint , imagebase,sectionAlignment, fileAlignment, dataDirectory ( import/export table) 
     vector<IMAGE_SECTION_HEADER> sectionHeaders;
+    multimap<string, string> importTable;
+    map<DWORD, string> exportTable;
+
     bool is_64 = false;
 
     //Start of section declarations
