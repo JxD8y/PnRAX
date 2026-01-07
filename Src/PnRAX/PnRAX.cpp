@@ -15,12 +15,11 @@ int main(int argc, char* argv[]) {
     
     ImEasyWindowManager wMgr("PnRAX", ImVec2(1200,700));
     GlobalContext gCtx;
-    gCtx.targetName = "TEST_TARGET.exe";
 
     DecompilerWindow wDecompiler(gCtx,ImVec2(0,0),ImVec2(800,700));
-    PEViewerWindow wPEViewer(gCtx, ImVec2(1, 0),ImVec2(400,300));
-	IETableWindow wImportTable(gCtx, ImVec2(2, 0), true, ImVec2(400, 700));
-	IETableWindow wExportTable(gCtx, ImVec2(1, 1), false, ImVec2(400, 400));
+    PEViewerWindow wPEViewer(gCtx, ImVec2(1, 0),ImVec2(500,700));
+	IETableWindow wImportTable(gCtx, ImVec2(2, 0), true, ImVec2(400, 350));
+	IETableWindow wExportTable(gCtx, ImVec2(2, 1), false, ImVec2(400, 350));
 
 	gCtx.pDecompilerWindow = &wDecompiler;
 	gCtx.pPEViewerWindow = &wPEViewer;
