@@ -52,8 +52,11 @@ int WinMain(HINSTANCE hin,HINSTANCE hpr, LPSTR cmd, int cmdShow) {
 
     csh ch;
 
+    HICON hIcon = (HICON)LoadImage(hin, MAKEINTRESOURCE(IDI_ICON1), IMAGE_ICON, GetSystemMetrics(SM_CXICON), GetSystemMetrics(SM_CYICON), LR_DEFAULTCOLOR);
+    HICON hIconSmall = (HICON)LoadImage(hin, MAKEINTRESOURCE(IDI_ICON1), IMAGE_ICON, GetSystemMetrics(SM_CXSMICON), GetSystemMetrics(SM_CYSMICON), LR_DEFAULTCOLOR);
 
     wMgr.SetTopMenu(TopMenu::RenderApplicationTopMenu);
+    wMgr.SetWin32Icons(hIcon, hIconSmall);
 
     wMgr.AddWindow(&wDecompiler);
     wMgr.AddWindow(&wImportTable);

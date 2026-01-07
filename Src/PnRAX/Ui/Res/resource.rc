@@ -1,3 +1,4 @@
 #include "resource.h"
 
 IDR_APP_FONT_GLOBAL RCDATA "Fonts/calibri.ttf"
+IDI_ICON1 ICON "app.ico"

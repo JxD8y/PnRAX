@@ -36,6 +36,6 @@ public:
 private:
 
 	csh _cs_hnd;
-	vector<uint8_t> _decomp_offset;
+	vector<uint64_t> _decomp_offset;
 	GlobalContext& m_gctx;
 };
