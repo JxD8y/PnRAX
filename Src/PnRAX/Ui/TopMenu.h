@@ -4,6 +4,9 @@
 #include <commdlg.h>
 #include "GlobalContext.h"
 #include "PnLdr/PnLdr.h"
+#include <shlwapi.h>
+
+#pragma comment(lib ,"Shlwapi.lib")
 
 using namespace std;
 
@@ -18,7 +21,7 @@ bool OpenPeFileDialog(string& filePath, HWND hwndOwner = NULL) {
 
 	ofn.lpstrFile[0] = '\0';
 	ofn.nMaxFile = sizeof(szFile);
-	ofn.lpstrFilter = "*.exe\0*.EXE\0*.dll\0Dynamic link library\0*.DLL";
+	ofn.lpstrFilter = "*.exe\0*.EXE\0*.dll\0*.DLL";
 	ofn.nFilterIndex = 1;
 	ofn.lpstrFileTitle = NULL;
 	ofn.nMaxFileTitle = 0;
@@ -101,6 +104,7 @@ namespace TopMenu {
 }
 void StartDisassembling(string fileName) {
 	GlobalContext* g_ctx = TopMenu::g_ctx;
+	TopMenu::g_ctx->targetName = string(PathFindFileNameA(fileName.c_str()));
 	auto d = PnLdr::OpenFile(fileName);
 	g_ctx->targetData = d;
 	((DecompilerWindow*)g_ctx->pDecompilerWindow)->_init_cs();

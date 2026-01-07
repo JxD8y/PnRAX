@@ -1,9 +1,11 @@
-add_subdirectory("ImGui")
+add_subdirectory("ImEasy")
 
 add_library(PnRAXGUI STATIC 
+	 "PEViewer.cpp"
 	 "DecompilerWindow.cpp"
 	 "GlobalContext.h"
-	 "TopMenu.h")
+	 "TopMenu.h"
+	 "IETableWindow.cpp")
 
 find_package(fmt REQUIRED)
 find_package(imgui CONFIG REQUIRED)

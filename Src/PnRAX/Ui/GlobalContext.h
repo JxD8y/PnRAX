@@ -11,7 +11,7 @@ class GlobalContext {
 public:
 	//Global data
 	string targetName;
-	string targetPath;
+
 	bool isDark = true;
 
 	//Window desc

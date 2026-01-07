@@ -26,8 +26,10 @@ public:
 
 	~DecompilerWindow();
 	
-	void Render() override;
+	[[nodiscard]] string GetTitle() override;
 
+	void Render() override;
+	
 	void _init_cs();
 private:
 
