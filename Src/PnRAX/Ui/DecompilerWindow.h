@@ -29,8 +29,10 @@ public:
 	[[nodiscard]] string GetTitle() override;
 
 	void Render() override;
-	
+
+	void _clear_offset();
 	void _init_cs();
+
 private:
 
 	csh _cs_hnd;

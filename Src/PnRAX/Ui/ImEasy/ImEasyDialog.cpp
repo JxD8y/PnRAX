@@ -49,15 +49,12 @@ void Imeasy::__imeasy_internal::RenderMessageBox() {
     }
     
     if (ImGui::BeginPopupModal(g_MsgBox.title.c_str(), nullptr,ImGuiWindowFlags_AlwaysAutoResize| ImGuiWindowFlags_NoMove)) {
-        ImGui::Dummy(ImVec2(0, 20));
+        ImGui::Dummy(ImVec2(0, 5));
 
-        ImGui::SetWindowFontScale(1.2f);
         ImGui::Text("%s", g_MsgBox.message.c_str());
-        ImGui::SetWindowFontScale(1);
 
-        ImGui::Dummy(ImVec2(Imeasy::width/4, 20));
+        ImGui::Dummy(ImVec2(Imeasy::width/4, 10));
 
-        ImGui::SetWindowFontScale(1.1f);
         
         if(IsDarkMode())
             ImGui::PushStyleColor(ImGuiCol_Button, ColorAccentDark);
@@ -78,7 +75,6 @@ void Imeasy::__imeasy_internal::RenderMessageBox() {
 
         }
         ImGui::PopStyleColor();
-        ImGui::SetWindowFontScale(1);
         ImGui::PopStyleVar(2);
         ImGui::EndPopup();
     }

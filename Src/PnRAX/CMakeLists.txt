@@ -1,10 +1,13 @@
 ﻿set(CXX_STANDARD_REQUIRED ON)
 set(CXX_STANDARD 20)
 
-
-add_executable(Pnrx "PnRAX.cpp")
 add_subdirectory("PnLdr")
 add_subdirectory("Ui")
+message(STATUS "DEBUG: My Resource File is: '${APP_RESOURCES}'")
+
+add_executable(Pnrx WIN32 "PnRAX.cpp" 
+                "Ui/Res/resource.rc"
+                "Ui/Res/Fonts/calibri.ttf")
 
 if(MSVC)
     target_compile_options(ImEasy PRIVATE /std:c++20)

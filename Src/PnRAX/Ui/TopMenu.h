@@ -4,12 +4,9 @@
 #include <commdlg.h>
 #include "GlobalContext.h"
 #include "PnLdr/PnLdr.h"
-#include <shlwapi.h>
-
-#pragma comment(lib ,"Shlwapi.lib")
+#include "PnRAX.h"
 
 using namespace std;
-
 bool OpenPeFileDialog(string& filePath, HWND hwndOwner = NULL) {
 	OPENFILENAME ofn;
 	char szFile[260];
@@ -40,24 +37,41 @@ void StartDisassembling(string fileName);
 namespace TopMenu {
 
 	GlobalContext* g_ctx = NULL;
-
+	string vStr = "V0.0";
 	void RenderApplicationTopMenu() {
+		ImGuiIO& io = ImGui::GetIO();
 		if (g_ctx) {
+			if (io.KeyCtrl && ImGui::IsKeyPressed(ImGuiKey_N,false)) {
+				string path = "";
+				if (!OpenPeFileDialog(path)) {
+					Imeasy::ShowMessageBox("Operation Canceled"
+						, "No file has been selected", MessageBoxData::Level::Warn, { "Ok" }, NULL);
+				}
+				else {
+					LoadNewFile(path);
+				}
+			}
+			if (io.KeyCtrl && ImGui::IsKeyPressed(ImGuiKey_X)) {
+				Imeasy::ShowMessageBox("Exit", "Are you sure to quit?", MessageBoxData::Level::Warn, { "Yes" , "No"}, [](int i) {
+					if (i == 0)
+						exit(0);
+				});
+			}
 			if (ImGui::BeginMainMenuBar()) {
 				if (ImGui::BeginMenu("File")) {
-					if (ImGui::MenuItem("Open")) {
+					if (ImGui::MenuItem("Open","Ctrl+N")) {
 						string path = "";
 						if (!OpenPeFileDialog(path)) {
 							Imeasy::ShowMessageBox("Operation Canceled"
 								, "No file has been selected", MessageBoxData::Level::Warn, { "Ok"}, NULL);
 						}
 						else {
-							StartDisassembling(path);
+							LoadNewFile(path);
 						}
 						
 					}
 					ImGui::Separator();
-					if (ImGui::MenuItem("Exit")) {
+					if (ImGui::MenuItem("Exit","Ctrl+X")) {
 						Imeasy::ShowMessageBox("Exit", "Are you sure to quit?", MessageBoxData::Level::Warn, { "Yes" , "No"}, [](int i) {
 							if (i == 0)
 								exit(0);
@@ -85,14 +99,24 @@ namespace TopMenu {
 					}
 					ImGui::EndMenu();
 				}
-				if (ImGui::BeginMenu("About")) {
-
-					if (ImGui::MenuItem("GitHub")) {
-						ShellExecuteA(NULL, "open", "https://github.com/jxd8y", NULL, NULL, SW_SHOWNORMAL);
+				if (ImGui::BeginMenu("Help")) {
+					if (ImGui::MenuItem("About PnRAX")) {
+						Imeasy::ShowMessageBox(string("About PnRAX ") + vStr,
+							"PnRAX is a open-source disassembler and PE viewer\naimed to be simple and portable\n(Some AI features will be add in future updates)\n\nCopyrigh 2026 JxD8y.\nThis application is licensed under the Apache License, Version 2.0\nThis software is provided on an 'as is' basis, without warranties\nor conditions of any kind, either express or implied"
+							, MessageBoxData::Level::Info, { "Open Project repo.","Close" }, [](int i) {
+								if (i == 0) {
+									ShellExecuteA(NULL, "open", "https://github.com/jxd8y/pnrax", NULL, NULL, SW_SHOWNORMAL);
+								}
+							});
 					}
-					if (ImGui::MenuItem("About Me")) {
-						Imeasy::ShowMessageBox("About me",
-							"Im JxD8y!\nNothing to say now \nobviously im filling this with garbage text!", MessageBoxData::Level::Info, {"Ok"},NULL);
+					if (ImGui::MenuItem("About Developer")) {
+						Imeasy::ShowMessageBox(string("About Me"),
+							"Hello im JxD8y\n\nEverything you should know about me is in my Github\n\n\t\tThank you for choosing this software"
+							, MessageBoxData::Level::Info, { "Open Github","Close" }, [](int i) {
+								if (i == 0) {
+									ShellExecuteA(NULL, "open", "https://github.com/jxd8y", NULL, NULL, SW_SHOWNORMAL);
+								}
+							});
 					}
 					ImGui::EndMenu();
 				}
@@ -103,9 +127,5 @@ namespace TopMenu {
 
 }
 void StartDisassembling(string fileName) {
-	GlobalContext* g_ctx = TopMenu::g_ctx;
-	TopMenu::g_ctx->targetName = string(PathFindFileNameA(fileName.c_str()));
-	auto d = PnLdr::OpenFile(fileName);
-	g_ctx->targetData = d;
-	((DecompilerWindow*)g_ctx->pDecompilerWindow)->_init_cs();
+	
 }

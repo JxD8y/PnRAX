@@ -21,10 +21,10 @@ IETableWindow::IETableWindow(GlobalContext& ctx, ImVec2 grid, bool imp,ImVec2 re
 
 void IETableWindow::Render() {
     if (this->_import) {
-        ImGui::PushStyleColor(ImGuiCol_TitleBg, ImVec4(0.10f, 0.25f, 0.50f, 1.0f));
-        ImGui::PushStyleColor(ImGuiCol_TitleBgActive, ImVec4(0.15f, 0.40f, 0.80f, 1.0f));
-        ImGui::PushStyleColor(ImGuiCol_TitleBgCollapsed, ImVec4(0.20f, 0.45f, 0.85f, 1.0f));
-    
+        ImGui::PushStyleColor(ImGuiCol_TitleBg, ImVec4(0.15f, 0.16f, 0.17f, 1.00f));
+        ImGui::PushStyleColor(ImGuiCol_TitleBgActive, ImVec4(0.22f, 0.24f, 0.26f, 1.00f));
+        ImGui::PushStyleColor(ImGuiCol_TitleBgCollapsed, ImVec4(0.10f, 0.10f, 0.10f, 1.00f));
+
         ImGui::Begin(this->GetTitle().c_str(), NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize);
         ImGui::PopStyleColor(3);
         if (this->m_gctx.targetData != NULL && this->m_gctx.targetData->importTable.size() > 0) {
@@ -50,9 +50,10 @@ void IETableWindow::Render() {
         ImGui::End();
     }
     else {
-        ImGui::PushStyleColor(ImGuiCol_TitleBg, ImVec4(0.50f, 0.20f, 0.80f, 1.0f));
-        ImGui::PushStyleColor(ImGuiCol_TitleBgActive, ImVec4(0.50f, 0.20f, 0.80f, 1.0f));
-        ImGui::PushStyleColor(ImGuiCol_TitleBgCollapsed, ImVec4(0.55f, 0.25f, 0.85f, 1.0f));
+        ImGui::PushStyleColor(ImGuiCol_TitleBg, ImVec4(0.15f, 0.16f, 0.17f, 1.00f));
+        ImGui::PushStyleColor(ImGuiCol_TitleBgActive, ImVec4(0.22f, 0.24f, 0.26f, 1.00f));
+        ImGui::PushStyleColor(ImGuiCol_TitleBgCollapsed, ImVec4(0.10f, 0.10f, 0.10f, 1.00f));
+
         ImGui::Begin(this->GetTitle().c_str(), NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize);
         
         ImGui::PopStyleColor(3);

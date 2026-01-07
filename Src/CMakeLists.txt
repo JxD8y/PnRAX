@@ -5,6 +5,6 @@ if (POLICY CMP0141)
 endif()
 
 
-project ("PnRAX")
+project ("PnRAX" LANGUAGES CXX RC)
 
 add_subdirectory ("PnRAX")

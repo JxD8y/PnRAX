@@ -13,9 +13,11 @@ PEViewerWindow::PEViewerWindow(GlobalContext& ctx, ImVec2 grid, ImVec2 rec)
 }
 
 void PEViewerWindow::Render() {
-    ImGui::PushStyleColor(ImGuiCol_TitleBg, ImVec4(0.13f, 0.40f, 0.28f, 1.0f));
-    ImGui::PushStyleColor(ImGuiCol_TitleBgActive, ImVec4(0.18f, 0.55f, 0.34f, 1.0f));
-    ImGui::PushStyleColor(ImGuiCol_TitleBgCollapsed, ImVec4(0.20f, 0.50f, 0.35f, 1.0f));
+    
+    ImGui::PushStyleColor(ImGuiCol_TitleBg, ImVec4(0.15f, 0.16f, 0.17f, 1.00f));
+    ImGui::PushStyleColor(ImGuiCol_TitleBgActive, ImVec4(0.22f, 0.24f, 0.26f, 1.00f));
+    ImGui::PushStyleColor(ImGuiCol_TitleBgCollapsed, ImVec4(0.10f, 0.10f, 0.10f, 1.00f));
+
     ImGui::Begin(this->GetTitle().c_str(), NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize);
     ImGui::PopStyleColor(3);
     if (this->m_gctx.targetData == NULL) {

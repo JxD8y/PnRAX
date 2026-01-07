@@ -57,10 +57,7 @@ namespace Imeasy {
 		ImGui::CreateContext();
 
 		ImGuiIO& io = ImGui::GetIO();
-		auto pFont = io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\Arial.ttf", 22.0);
-		if (pFont == NULL) {
-			io.Fonts->AddFontDefault();
-		}
+
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 		ImGuiStyle& style = ImGui::GetStyle();
 		

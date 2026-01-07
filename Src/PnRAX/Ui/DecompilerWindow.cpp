@@ -24,6 +24,9 @@ void RenderBytes(const uint8_t* bytes, uint16_t size) {
     }
     ImGui::TextUnformatted(buffer);
 }
+void DecompilerWindow::_clear_offset() {
+    this->_decomp_offset.clear();
+}
 void DecompilerWindow::_init_cs() {
     if (cs_open(CS_ARCH_X86, CS_MODE_64, &this->_cs_hnd) != CS_ERR_OK) {
         throw runtime_error("Cannot initiate capstone");
@@ -63,16 +66,17 @@ const char* get_ptr_size_name(uint8_t size) {
 }
 
 void DecompilerWindow::Render() {
-    ImGui::PushStyleColor(ImGuiCol_TitleBg, ImVec4(.80f, 0.65f, 0.2f, 1.0f));
-    ImGui::PushStyleColor(ImGuiCol_TitleBgActive, ImVec4(1.0f, 0.65f, 0.2f, 1.0f));
-    ImGui::PushStyleColor(ImGuiCol_TitleBgCollapsed, ImVec4(1.0f, 0.65f, 0.2f, 1.0f));
+    ImGui::PushStyleColor(ImGuiCol_TitleBg, ImVec4(0.18f, 0.30f, 0.45f, 1.00f));
+    ImGui::PushStyleColor(ImGuiCol_TitleBgActive, ImVec4(0.22f, 0.38f, 0.56f, 1.00f));
+    ImGui::PushStyleColor(ImGuiCol_TitleBgCollapsed, ImVec4(0.12f, 0.20f, 0.30f, 1.00f));
+
 	ImGui::Begin(this->GetTitle().c_str() , NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize);
     ImGui::PopStyleColor(3);
     int columns = 3;
 
     ImGuiTableFlags flags =  ImGuiTableFlags_Resizable | ImGuiTableFlags_ScrollY;
     if (ImGui::BeginTable("DisassemblyTable", columns, flags)) { 
-        ImGui::TableSetupColumn("Address", ImGuiTableColumnFlags_WidthFixed, 80.0f);
+        ImGui::TableSetupColumn("Address", ImGuiTableColumnFlags_WidthFixed, 100.0f);
         ImGui::TableSetupColumn("Bytes", ImGuiTableColumnFlags_WidthFixed, 80.0f);
         ImGui::TableSetupColumn("Assembly", ImGuiTableColumnFlags_WidthStretch);
         ImGui::TableHeadersRow();
@@ -107,7 +111,7 @@ void DecompilerWindow::Render() {
                         ImGui::PushStyleColor(ImGuiCol_Text, ColorMnemonicDark);
                     else
                         ImGui::PushStyleColor(ImGuiCol_Text, ColorMnemonicLight);
-                    ImGui::Text("%s ", pIns->mnemonic);
+                    ImGui::Text("%s", pIns->mnemonic);
                     ImGui::SameLine();
                     ImGui::PopStyleColor();
 
@@ -120,7 +124,7 @@ void DecompilerWindow::Render() {
                         switch (op->type) {
                             case X86_OP_REG:
                                 ImGui::PushStyleColor(ImGuiCol_Text, ColorReg);
-                                ImGui::Text("%s ", cs_reg_name(this->_cs_hnd,op->reg));
+                                ImGui::Text("%s", cs_reg_name(this->_cs_hnd,op->reg));
                                 ImGui::SameLine();
                                 ImGui::PopStyleColor();
                                 break;

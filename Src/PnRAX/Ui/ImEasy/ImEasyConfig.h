@@ -1,5 +1,7 @@
 #pragma once
 
+#define GLOBALFONT "C:\\Windows\\Fonts\\Consolas.ttf"
+
 #define ElementCornerRadius 5.0f
 #define DialogCornerRadius 7.0f
 
