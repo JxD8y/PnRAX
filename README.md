@@ -1,4 +1,4 @@
-# PnRAX - Disassembler and PE viewer
+# PnRAX - Decompiler and PE viewer
 
 I built this tool because i wanted a lightweight, modular, and easy-to-use GUI for exploring x86-64 Windows PE files and disassembling code without the bulk of larger applications. This V0.1 release is the first stable foundation, but i am actively working on adding new modules and features in upcoming updates.
  
